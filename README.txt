@@ -9,8 +9,8 @@ Dette Github repositoriet ble opprettet sent grunnet overgang fra
 source.uit.no ettersom dette var nede over en lengre periode
 
 - Github brukernavn for studentene -
- ______________________________
-|Anders Rubach Ese -> Ander758 |
-|Mats-Erik Eriksen -> Unicron2k|
-|Saman Mohammed -> Samandinho  |
-|______________________________|
+ ___________________________________
+|Anders Rubach Ese  -> Ander758     |
+|Mats-Erik Eriksen  -> Unicron2k    |
+|Saman Mohammed     -> Samandinho   |
+|___________________________________|
