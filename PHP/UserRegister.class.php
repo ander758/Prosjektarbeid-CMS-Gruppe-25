@@ -74,10 +74,14 @@ class UserRegister implements UserInterface {
         }
     }
 
-    public function oppdaterStudent(Student $student, int $id) : bool {
+    // TODO -> Fortsett her
+    public function oppdaterUser(User $user, int $id) : bool {
         try
         {
-            // implementer denne
+            $stmt = $this->db->prepare("UPDATE User SET Username= :username, Email= :epost, FirstName= :fornavn, LastName= :etternavn WHERE UserID =:id"); // TODO -> Skal vi ha med 'SET PassHash' her?
+            $stmt->bindParam()
+
+
             $stmt = $this->db->prepare("UPDATE studenter SET etternavn= :etternavn, fornavn= :fornavn, klasse= :klasse, mobil= :mobil, www= :www, epost= :epost WHERE id = :id ");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindValue(':etternavn', $student->hentEtterNavn(), PDO::PARAM_STR);
