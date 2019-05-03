@@ -1,20 +1,19 @@
 <?php
     require_once ('auth_pdo.php');
-    require_once ('Student.class.php');
-    require_once ('Klasse.class.php');
-    require_once ('StudentInterface.class.php');
-    require_once ('StudentRegister.class.php');
+    require_once('User.class.php');
+    require_once('UserInterface.class.php');
+    require_once('UserRegister.class.php');
     require_once 'vendor/autoload.php';
 
     $loader = new Twig_Loader_Filesystem('templates');
     $twig = new Twig_Environment($loader);
-    $studentregister = new StudentRegister($db);
+    $userregister = new UserRegister($db);
 
     if(isset($_POST['id']) && isset($_POST['edit'])){
         //Rediger en student
         $id = intval($_GET['id']);
         try {
-            if($student = $studentregister->visStudent($id) ) {
+            if($user = $userregister->visUser($id) ) {
                 echo $twig->render('edit.twig', array('student' => $student, 'edit' => true));
             }
         }
@@ -36,10 +35,7 @@
                 $student = new Student();
                 $student->settEtterNavn($etterNavn);
                 $student->settForNavn($forNavn);
-                $student->settKlasse($klasse);
-                $student->settMobil($mobil);
                 $student->settEpost($epost);
-                $student->settURL($url);
                 if($studentregister->oppdaterStudent($student, $id) ) {
                     echo $twig->render('edit.twig', array('student' => $student));
                 }
