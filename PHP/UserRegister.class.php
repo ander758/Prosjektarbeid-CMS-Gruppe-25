@@ -6,7 +6,6 @@ class UserRegister implements UserInterface {
 		$this->db = $db;
 	}
 
-
 	public function visAlle(): array {
 		$users = array();
 
@@ -53,13 +52,11 @@ class UserRegister implements UserInterface {
 
     public function leggTilUser(User $user) : int {
         try {
-            $username = $user->hentUsername();
-            $epost = $user->hentEpost();
-            $fornavn = $user->HentForNavn();
-            $etternavn = $user->hentEtterNavn();
-            $opprettet = date('Y/m/d h:i:s'); // Henter systemets dato
-
-            $stmt = $this->db->prepare("INSERT INTO `User`(`UserID`, `Username`, `Email`, `PassHash`, `FirstName`, `LastName`) VALUES (NULL,$username,$epost,NULL ,$fornavn,$etternavn)"); // TODO -> Hva skal 'PassHash' være her?
+            $stmt = $this->db->prepare("INSERT INTO User (UserID, Username, Email, PassHash, FirstName, LastName) VALUES (NULL,:username,:epost,NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
+            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
+            $stmt->bindValue(':fornavn', $user->hentForNan(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->hentEtterNavn(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
             if ($result) {
@@ -68,28 +65,20 @@ class UserRegister implements UserInterface {
                 echo "Feil ved innlegging av ny bruker!";
                 return false;
             }
-        }
-        catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
     }
 
     // TODO -> Fortsett her
     public function oppdaterUser(User $user, int $id) : bool {
-        try
-        {
+        try {
             $stmt = $this->db->prepare("UPDATE User SET Username= :username, Email= :epost, FirstName= :fornavn, LastName= :etternavn WHERE UserID =:id"); // TODO -> Skal vi ha med 'SET PassHash' her?
-            $stmt->bindParam()
-
-
-            $stmt = $this->db->prepare("UPDATE studenter SET etternavn= :etternavn, fornavn= :fornavn, klasse= :klasse, mobil= :mobil, www= :www, epost= :epost WHERE id = :id ");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindValue(':etternavn', $student->hentEtterNavn(), PDO::PARAM_STR);
-            $stmt->bindValue(':fornavn', $student->hentForNavn(), PDO::PARAM_STR);
-            $stmt->bindValue(':klasse', $student->hentKlasse(), PDO::PARAM_INT);
-            $stmt->bindValue(':mobil', $student->hentMobil(), PDO::PARAM_STR);
-            $stmt->bindValue(':www', $student->hentURL(), PDO::PARAM_STR);
-            $stmt->bindValue(':epost', $student->hentEpost(), PDO::PARAM_STR);
+            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
+            $stmt->bindValue(':fornavn', $user->hentFornavn(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->hentEtternavn(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
             if ($result) {
