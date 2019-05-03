@@ -11,7 +11,7 @@ class UserRegister implements UserInterface {
 		$users = array();
 
         try {
-            $stmt = $this->db->prepare("SELECT * FROM User");
+            $stmt = $this->db->prepare("SELECT * FROM User"); // TODO -> Ser ut som at 'User' er en SQL syntax her?
             $stmt->execute();
             while ($user = $stmt->fetchObject("User")) {
                 $users[] = $user;
@@ -51,28 +51,21 @@ class UserRegister implements UserInterface {
         }
     }
 
-    public function leggUser(User $user) : int {
+    public function leggTilUser(User $user) : int {
         try {
             $username = $user->hentUsername();
             $epost = $user->hentEpost();
             $fornavn = $user->HentForNavn();
-            $etternavn =
-
-            $fornavn = $user->hentForNavn();
             $etternavn = $user->hentEtterNavn();
-            $klasse = $student->hentKlasse();
-            $mobil = $student->hentMobil();
-            $www = $student->hentURL();
-            $epost = $student->hentEpost();
             $opprettet = date('Y/m/d h:i:s'); // Henter systemets dato
 
-            $stmt = $this->db->prepare("INSERT INTO `student`(`id`, `etternavn`, `fornavn`, `klasse`, `mobil`, `www`, `epost`, `opprettet`) VALUES (NULL , $etternavn, $fornavn, $klasse, $mobil, $www, $epost, $opprettet)");
+            $stmt = $this->db->prepare("INSERT INTO `User`(`UserID`, `Username`, `Email`, `PassHash`, `FirstName`, `LastName`) VALUES (NULL,$username,$epost,NULL ,$fornavn,$etternavn)"); // TODO -> Hva skal 'PassHash' være her?
             $result = $stmt->execute();
 
             if ($result) {
                 return true;
             } else {
-                echo "Feil ved innlegging av ny student!";
+                echo "Feil ved innlegging av ny bruker!";
                 return false;
             }
         }
