@@ -1,9 +1,9 @@
 <?php
-    require_once('auth_pdo.php');
+    require_once('../auth_pdo.php');
     require_once('User.class.php');
     require_once('UserInterface.class.php');
     require_once('UserRegister.class.php');
-    require_once ('../vendor/autoload.php');
+    require_once('../../vendor/autoload.php');
 
     $loader = new Twig_Loader_Filesystem('templates');
     $twig = new Twig_Environment($loader);

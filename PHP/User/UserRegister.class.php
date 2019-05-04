@@ -6,6 +6,7 @@ class UserRegister implements UserInterface {
 		$this->db = $db;
 	}
 
+
 	public function visAlle(): array {
 		$users = array();
 
@@ -73,7 +74,6 @@ class UserRegister implements UserInterface {
         }
     }
 
-    // TODO -> Fortsett her
     public function oppdaterUser(User $user, int $id) : bool {
         try {
             $stmt = $this->db->prepare("UPDATE User SET Username= :username, Email= :epost, FirstName= :fornavn, LastName= :etternavn WHERE UserID =:id"); // TODO -> Skal vi ha med 'SET PassHash' her?
