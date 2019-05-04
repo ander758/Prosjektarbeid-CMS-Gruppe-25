@@ -9,7 +9,7 @@ $loader = new Twig_Loader_Filesystem('templates'); // ../?
 $twig = new Twig_Environment($loader);
 $userregister = new UserRegister($db);
 
-if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user first
+if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $firstName = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING);
@@ -21,5 +21,11 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
     $user->settForNavn($firstName);
     $user->settEtterNavn($lastName);
     $userregister->leggTilUser($user);
+
+} elseif (isset($_POST['cancel_signup'])) {
+    // Redirect back to index page...
+    header('Location: https://kark.uit.no/~aes014/Root/.......lokasjon til index.......');
+    // Exit current script
+    die();
 }
 ?>
