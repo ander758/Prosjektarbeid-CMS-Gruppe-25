@@ -3,10 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>New User</title>
-    <link rel="stylesheet" href="css/stylesheet-sign up.css" />
+    <link rel="stylesheet" href="../css/stylesheet-signUp.css" />
 </head>
 <body>
+
+<!--Add user--> <!--Med hjelp fra: https://www.w3schools.com/howto/howto_css_signup_form.asp-->
+<form method="post" style="border: 1px solid #ccc">
+    <div class="container">
+        <h1>Sign Up</h1>
+        <p>Lag ny bruker ved å fylle inn skjemaet under.</p><hr>
+
+        <label for="firstName"><b>Fornavn</b></label>
+        <input type="text" placeholder="Fornavn" name="firstName" required>
+
+        <label for="lastName"><b>Etternavn</b></label>
+        <input type="text" placeholder="Etternavn" name="lastName" required>
+
+        <label for="username"><b>Brukernavn</b></label>
+        <input type="text" placeholder="Brukernavn" name="username" required>
+
+        <label for="email"><b>Epost</b></label>
+        <input type="email" placeholder="Skriv inn Epost" name="email" required>
+
+        <label for="psw"><b>Passord</b></label>
+        <input type="password" placeholder="Skriv inn passord" name="psw" required>
+
+        <label for="psw-repeat"><b>Gjenta passord</b></label>
+        <input type="password" placeholder="Gjenta passord" name="psw-repeat" required>
+
+        <div class="clearfix">
+            <button type="button" class="cancelbtn">Avbryt</button>
+            <button type="submit" class="signupbtn">Registrer ny bruker</button>
+        </div>
+    </div>
+</form>
+
 
 
 </body>
 </html>
+
+<h3>Endre student</h3>
+<form method="post">
+    <input type="hidden" name="id" value="{{ student.hentId()}}" />
+    <label>Fornavn:</label>
+    <input type="text" name="forNavn" value="{{ student.hentForNavn()}}" required />
+    <label>Etternavn:</label>
+    <input type="text" name="etterNavn" value="{{ student.hentEtterNavn()}}" required />
+    <label>Mobil:</label>
+    <input type="number" name="mobil" size="8" value="{{ student.hentMobil()}}" required/>
+    <label>URL:</label>
+    <input type="email" name="epost" value="{{ student.hentEpost()}}" required/>
+    <label>Klasse:</label>
+    <input type="text" name="klasse" size="4" value="{{ student.hentKlasse()}}" required/>
+    <label>&Oslash;nsket yrke:</label>
+    <input type="submit" name="save" value="Lagre endringer">
+</form>

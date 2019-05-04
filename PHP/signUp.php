@@ -3,9 +3,9 @@ require_once('auth_pdo.php');
 require_once('User.class.php');
 require_once('UserInterface.class.php');
 require_once('UserRegister.class.php');
-require_once ('vendor/autoload.php');
+require_once '../vendor/autoload.php'; // ../ For relativ path
 
-$loader = new Twig_Loader_Filesystem('templates');
+$loader = new Twig_Loader_Filesystem('templates'); // ../?
 $twig = new Twig_Environment($loader);
 $userregister = new UserRegister($db);
 
@@ -23,10 +23,3 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
     $userregister->leggTilUser($user);
 }
 ?>
-
-/*
-
-
-
-
-*/

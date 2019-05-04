@@ -52,7 +52,7 @@ class UserRegister implements UserInterface {
 
     public function leggTilUser(User $user) : int {
         try {
-            $stmt = $this->db->prepare("INSERT INTO User (UserID, Username, Email, PassHash, FirstName, LastName) VALUES (NULL,:username,:epost,NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
+            $stmt = $this->db->prepare("INSERT INTO User (UserID, Username, Email, PassHash, FirstName, LastName) VALUES (NULL,:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
             $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
             $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
             $stmt->bindValue(':fornavn', $user->hentForNan(), PDO::PARAM_STR);
