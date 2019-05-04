@@ -1,5 +1,5 @@
 <?php
-class student {
+class user {
     private $id;
     private $username;
     private $epost;
@@ -30,6 +30,9 @@ class student {
     }
 
     // Setters
+    function settUsername($username) {
+        $this->username = $username;
+    }
     function settEpost($epost) {
         $this->epost = $epost;
     }

@@ -59,6 +59,9 @@ class UserRegister implements UserInterface {
             $stmt->bindValue(':etternavn', $user->hentEtterNavn(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
+            // TODO -> Her må vi ha sending av epost til ny bruker for opprettelse av ny User. Før execute kanskje
+
+
             if ($result) {
                 return true;
             } else {
