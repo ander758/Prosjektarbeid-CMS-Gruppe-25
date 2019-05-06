@@ -39,8 +39,17 @@ class FileRegister implements FileInterface {
     public function leggTilFile(File $file): int
     {
         // TODO: Implement leggTilFile() method.
-        // Vis til fillokajon BLOB på kark.uit.no?
-
+        $stmt = $this->db->prepare("INSERT INTO `File`(`FileID`, `File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
+            VALUES (NULL,:file,:userID,:author,:filename,:serverFilename,`:size`,:mimetype,:description,NULL,0,`:date`,NULL,NULL,NULL,NULL)");
+        $stmt->bindValue(':file', $file->hentFile(), PDO::PARAM_LOB);
+        $stmt->bindValue(':userID', $file->hentUserID(), PDO::PARAM_INT);
+        $stmt->bindValue(':author', $file->hentAuthor(), PDO::PARAM_STR);
+        $stmt->bindValue(':filename', $file->hentFileName(), PDO::PARAM_STR);
+        $stmt->bindValue(':serverFileName', NULL, PDO::PARAM_NULL); //??
+        $stmt->bindValue(':size', $file->hentFileSize(), PDO::PARAM_INT);
+        $stmt->bindValue(':mimetype', $file->hentMimetype(), PDO::PARAM_STR);
+        $stmt->bindValue(':description', $file->hentDescription(), PDO::PARAM_STR);
+        $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_INT); //??
     }
 
     public function oppdaterFil(File $file, int $id): bool

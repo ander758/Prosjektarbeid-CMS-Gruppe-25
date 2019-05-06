@@ -11,7 +11,7 @@ class UserRegister implements UserInterface {
 		$users = array();
 
         try {
-            $stmt = $this->db->prepare("SELECT * FROM User"); // TODO -> Ser ut som at 'User' er en SQL syntax her?
+            $stmt = $this->db->prepare("SELECT * FROM 'User'"); // TODO -> Ser ut som at 'User' er en SQL syntax her?
             $stmt->execute();
             while ($user = $stmt->fetchObject("User")) {
                 $users[] = $user;
@@ -52,7 +52,8 @@ class UserRegister implements UserInterface {
 
     public function leggTilUser(User $user) : int { // TODO -> er å finne i signUp.php
         try {
-            $stmt = $this->db->prepare("INSERT INTO User (UserID, Username, Email, PassHash, FirstName, LastName) VALUES (NULL,:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
+            $stmt = $this->db->prepare("INSERT INTO `user` (UserID, Username, Email, PassHash, FirstName, LastName) 
+                VALUES (NULL,:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
             $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
             $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
             $stmt->bindValue(':fornavn', $user->hentForNan(), PDO::PARAM_STR);
