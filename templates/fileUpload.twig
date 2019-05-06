@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mal</title>
+    <link rel="stylesheet" href="../css/stylesheet-signUp.css" />
+</head>
+<body>
+
+<!--Må sjekke om bruker er logget inn før en kan laste opp--> <!--kan egt. ha form i FileRegister.php-->
+<form method="post" style="border: 1px solid #ccc">
+    <div class="container">
+        <h1>Last opp fil</h1>
+        <p>Klikk 'Legg til fil' og 'Last opp' etter valgt fil</p>
+
+        <label for="fileToUpload"><b>Velg ønsket fil på din PC: </b></label>
+        <input type="file" name="fileToUpload" placeholder="Velg fil" required>
+
+        <label for="submit_fileToUpload"><b>Last opp</b></label>
+        <input type="submit" name="sumbit_fileToUpload" placeholder="Last opp fil">
+    </div>
+</form>
+
+</body>
+</html>

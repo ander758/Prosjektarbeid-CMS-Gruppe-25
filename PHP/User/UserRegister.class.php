@@ -17,8 +17,7 @@ class UserRegister implements UserInterface {
                 $users[] = $user;
             }
             return $users;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }
 		return $users;
