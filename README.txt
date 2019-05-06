@@ -9,6 +9,7 @@ Dette Github repositoriet ble opprettet sent grunnet overgang fra
 source.uit.no ettersom dette var nede over en lengre periode
 
 - Github brukernavn for studentene -
+Hvem som har gjort hva i repositoriet kan en se under Insights->Contributors på github siden
  ___________________________________
 |Anders Rubach Ese  -> Ander758     |
 |Mats-Erik Eriksen  -> Unicron2k    |
