@@ -9,9 +9,7 @@
     $twig = new Twig_Environment($loader);
     $userregister = new UserRegister($db);
 
-
-
-
+    
     if(isset($_POST['id']) && isset($_POST['edit'])){
         //Rediger en student
         $id = intval($_GET['id']);
