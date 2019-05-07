@@ -12,12 +12,27 @@ $twig = new Twig_Environment($loader, array(
 $db = DB::getDBConnection();
 
 if ($db==null) {
-    echo $twig->render('error.twig', array('msg' => 'Unable to connect to the database!'));
+    echo $twig->render('main.twig', array('error'=>true, 'msg' => 'Unable to connect to the database!'));
     die();  // Abort further execution of the script
 }
 
 $user = new User();
 $status=$user->checkLogin($db);
+
+if(isset($_GET['action']) && $_GET['action']=='logout'){
+    if($user->loggedIn()){
+        $user->logOut();
+        session_destroy();
+        //TODO: add twig-template for this
+        echo "logged out";
+        exit();
+    }
+    else {
+        //TODO: add twig-template for this
+        echo "not logged in";
+        exit();
+    }
+}
 
 if ($user->loggedIn()) {
     if(!isset($_SESSION['clientIp'])){
@@ -26,9 +41,9 @@ if ($user->loggedIn()) {
         $_SESSION['clientIp']=$_SERVER['REMOTE_ADDR'];
     }
     //Logged in, show logged-in page, then redirect to index
-    echo $twig->render('login.twig', array('loggedIn'=>'true', 'name'=>$_SESSION['name'] )); // Add other data as needed
+    header("Location: index.php");
 }
-else {
+else{
     //Not logged in, show log-in page
-    echo $twig->render('login.twig', array('loggedIn'=>'false', 'status'=>$status));
+    echo $twig->render('main.twig', array('login'=>true, 'loggedIn'=>false, 'status'=>$status));
 }
