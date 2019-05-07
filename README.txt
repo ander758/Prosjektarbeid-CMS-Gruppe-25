@@ -10,10 +10,10 @@ source.uit.no ettersom dette var nede over en lengre periode
 
 
 Hvem som har gjort hva i repositoriet kan en se under Insights på github repositoriet
-
-- Github brukernavn for studentene -
- ___________________________________
-|Anders Rubach Ese  -> Ander758     |
-|Mats-Erik Eriksen  -> Unicron2k    |
-|Saman Mohammed     -> Samandinho   |
-|___________________________________|
+ _______________________________________
+|  - Github brukernavn for studentene - |
+|                                       |
+| Anders Rubach Ese  -> Ander758        |
+| Mats-Erik Eriksen  -> Unicron2k       |
+| Saman Mohammed     -> Samandinho      |
+|_______________________________________|

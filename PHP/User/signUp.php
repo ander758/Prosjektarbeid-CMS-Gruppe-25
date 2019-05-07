@@ -1,13 +1,13 @@
 <?php
-require_once('auth_pdo.php');
+require_once('../auth_pdo.php');
 require_once('User.class.php');
 require_once('UserInterface.class.php');
 require_once('UserRegister.class.php');
-require_once '../vendor/autoload.php'; // ../ For relativ path
+require_once '../../vendor/autoload.php'; // ../ For relativ path
 
-$loader = new Twig_Loader_Filesystem('templates'); // ../?
+$loader = new Twig_Loader_Filesystem('../templates'); // ../?
 $twig = new Twig_Environment($loader);
-$userregister = new UserRegister($db);
+$userRegister = new UserRegister($db);
 
 if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
@@ -20,7 +20,7 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
     $user->settEpost($email);
     $user->settForNavn($firstName);
     $user->settEtterNavn($lastName);
-    $userregister->leggTilUser($user);
+    $userRegister->leggTilUser($user);
 
 } elseif (isset($_POST['cancel_signup'])) {
     // Redirect back to index page...
