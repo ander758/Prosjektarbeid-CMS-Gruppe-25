@@ -10,7 +10,7 @@
     $commentRegister = new CommentRegister(DB::getDBConnection());
     $deletedCommentRegister = new DeletedCommentRegister(DB::getDBConnection());
 
-    if (isset($_POST['id']) && isset($_POST['submit_comment'])) {
+    if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_comment'])) {
         // Gather date from submitted Comment
         $fileID = intval($_GET['fileID']);
         $userID = intval($_GET['id']); // UserID
@@ -26,5 +26,17 @@
 
         // Pass the object to $commentRegister to add it to the database
         $commentRegister->addComment($comment);
-    }
 
+    } elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
+        // Gather data from comment to delete
+        $userID = intval($_GET['id']);
+        //$commentID = TODO: Need to find ID for comment to remove
+        $commentID = 1;
+
+        // Make Comment object
+        $comment = new comment();
+        $comment->setCommentID($commentID);
+
+        // Delete the comment from database
+        $commentRegister->deleteComment($commentID);
+    }

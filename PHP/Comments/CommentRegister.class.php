@@ -82,7 +82,7 @@ class CommentRegister implements CommentInterface {
         }
     }
 
-    public function deleteComment(Comment $comment, int $commentID): bool
+    public function deleteComment(int $commentID): bool
     {
         // Delete specific comment by it's ID in table `Comments`
         try {

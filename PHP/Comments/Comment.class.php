@@ -28,6 +28,9 @@ class comment {
     }
 
     // Setters
+    function setCommentID($commentID) {
+        $this->setCommentID($commentID);
+    }
     function setFileID($fileID) {
         $this->fileID = $fileID;
     }

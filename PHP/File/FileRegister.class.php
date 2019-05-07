@@ -25,11 +25,12 @@ class FileRegister implements FileInterface {
 
     public function showFile(int $id): File
     {
-        // Gir File med gitt FileID
+        // Return given file with FileID
         try {
             $stmt = $this->db->prepare("SELECT * FROM File WHERE FileID = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
+
             return $stmt->fetchObject("File");
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
@@ -99,5 +100,24 @@ class FileRegister implements FileInterface {
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }
+    }
+
+    public function showAllFilesInCatalogue(int $catalogueID): Array
+    {
+        // Return array of files in given Catalogue
+        $files = array();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM File WHERE CatalogueID = :catalogueID");
+            $stmt->bindParam(':catalogueID', $catalogueID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            while ($file = $stmt->fetchObject("File")) {
+                $files = $file;
+            }
+            return $files;
+        } catch (Exception $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return $files;
     }
 }
