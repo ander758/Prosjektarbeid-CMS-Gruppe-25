@@ -1,6 +1,7 @@
 <?php
-class Comments {
-    private $id;
+class comment {
+    private $commentID;
+    private $fileID;
     private $userID; // ID to table 'USER'
     private $date;
     private $comment;
@@ -8,9 +9,13 @@ class Comments {
     function __construct() {
     }
 
+
     // Getters
-    function hentId() {
-        return $this->id;
+    function hentCommentId() {
+        return $this->commentID;
+    }
+    function hentFileID() {
+        return $this->fileID;
     }
     function hentUserID() {
         return $this->userID;
@@ -24,8 +29,6 @@ class Comments {
 
     // Setters
     function settComment($comment) {
-
+        $this->comment = $comment;
     }
-
-
 }

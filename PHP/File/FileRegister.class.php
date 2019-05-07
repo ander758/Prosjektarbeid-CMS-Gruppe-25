@@ -10,7 +10,7 @@ class FileRegister implements FileInterface {
     {
         $files = array();
         try {
-            $stmt = $this->db->query("SELECT * FROM File");
+            $stmt = $this->db->query("SELECT * FROM File ORDER BY `Date` DESC");
             $stmt->execute();
             while ($file = $stmt->fetchObject("File")) {
                 $files = $file;
@@ -36,20 +36,33 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function leggTilFile(File $file): int
+    public function leggTilFil(File $file): int
     {
-        // TODO: Implement leggTilFile() method.
-        $stmt = $this->db->prepare("INSERT INTO `File`(`FileID`, `File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
+        // Add file to table `File`
+        try {
+            $stmt = $this->db->prepare("INSERT INTO `File`(`FileID`, `File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
             VALUES (NULL,:file,:userID,:author,:filename,:serverFilename,`:size`,:mimetype,:description,NULL,0,`:date`,NULL,NULL,NULL,NULL)");
-        $stmt->bindValue(':file', $file->hentFile(), PDO::PARAM_LOB);
-        $stmt->bindValue(':userID', $file->hentUserID(), PDO::PARAM_INT);
-        $stmt->bindValue(':author', $file->hentAuthor(), PDO::PARAM_STR);
-        $stmt->bindValue(':filename', $file->hentFileName(), PDO::PARAM_STR);
-        $stmt->bindValue(':serverFileName', NULL, PDO::PARAM_NULL); //??
-        $stmt->bindValue(':size', $file->hentFileSize(), PDO::PARAM_INT);
-        $stmt->bindValue(':mimetype', $file->hentMimetype(), PDO::PARAM_STR);
-        $stmt->bindValue(':description', $file->hentDescription(), PDO::PARAM_STR);
-        $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_INT); //??
+            $stmt->bindValue(':file', $file->hentFile(), PDO::PARAM_LOB);
+            $stmt->bindValue(':userID', $file->hentUserID(), PDO::PARAM_INT);
+            $stmt->bindValue(':author', $file->hentAuthor(), PDO::PARAM_STR);
+            $stmt->bindValue(':filename', $file->hentFileName(), PDO::PARAM_STR);
+            $stmt->bindValue(':serverFileName', NULL, PDO::PARAM_NULL); //??
+            $stmt->bindValue(':size', $file->hentFileSize(), PDO::PARAM_INT);
+            $stmt->bindValue(':mimetype', $file->hentMimetype(), PDO::PARAM_STR);
+            $stmt->bindValue(':description', $file->hentDescription(), PDO::PARAM_STR);
+            $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result) {
+                return true;
+            } else {
+                echo "Feil ved innlegging av fil!";
+                return false;
+            }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+
     }
 
     public function oppdaterFil(File $file, int $id): bool
