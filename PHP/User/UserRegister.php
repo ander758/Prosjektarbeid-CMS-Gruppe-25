@@ -1,5 +1,5 @@
 <?php
-    require_once('../auth_pdo.php');
+    require_once('../DB.class.php');
     require_once('User.class.php');
     require_once('UserInterface.class.php');
     require_once('UserRegister.class.php');
@@ -7,7 +7,7 @@
 
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
-    $userregister = new UserRegister($db);
+    $userregister = new UserRegister(DB::getDBConnection());
 
 
 
