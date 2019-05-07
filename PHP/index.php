@@ -12,13 +12,13 @@ $twig = new Twig_Environment($loader, array(
 if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR']){
 
     //todo: Create index template, and send relevant data
-    echo $twig->render('index.twig', array('loggedIn' => true, 'name'=>$_SESSION['name']));
+    echo $twig->render('main.twig', array('index'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name']));
 
 } else {
 
     //todo: Create index template, and send relevant data
     unset($_SESSION['loggedIn']);
     unset($_SESSION['id']);
-    echo $twig->render('index.twig', array('loggedIn' => false));
+    echo $twig->render('main.twig', array('index'=>true, 'loggedIn' => false));
 }
 ?>

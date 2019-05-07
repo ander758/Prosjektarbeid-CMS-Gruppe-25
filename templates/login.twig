@@ -1,36 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>New User</title>
-    <link rel="stylesheet" href="../css/stylesheet-login.css" />
-</head>
-<body>
-<h1>LogIn page</h1>
-
-
-
-{% if loggedIn=='true' %}
-    <p>Logged in as: {{name}}</p>
-    <form action="login.php" method="post">
-        <input type="submit" name="logout" value="Logout">
-    </form>
-{% else %}
-    <h3>Du må logge inn</h3>
-    <form action="login.php" method="post">
-        <table>
-            <tr><td>Username: </td>
-                <td><input type="text" name="username"></td></tr>
-            <tr><td>Password: </td>
-                <td><input type="password" name="password" size="5"></td></tr>
-            <tr><td colspan="2"><input type="submit" name="login" value="Login"></td>
-            </tr>
-        </table>
-    </form>
-    {% if status is not null and status.status == "FAIL" %}
-        <p>{{ status.errorMessage }}</p>
-    {% endif %}
-{% endif %}
-
-</body>
-</html>
+<link rel="stylesheet" href="../css/login.css">
+<div class="login-page">
+    <div class="form">
+        <form class="login-form" method="post">
+            <input type="text" name="username" placeholder="Username"/>
+            <input type="password" name="password" placeholder="Password"/>
+            <button type="submit" name="login">login</button>
+            {% if status is not null and status.status == "FAIL" %}
+                <p class="message">{{ status.errorMessage }}</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
