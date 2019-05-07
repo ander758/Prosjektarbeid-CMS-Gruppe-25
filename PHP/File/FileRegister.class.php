@@ -40,8 +40,8 @@ class FileRegister implements FileInterface {
     {
         // Add file to table `File`
         try {
-            $stmt = $this->db->prepare("INSERT INTO `File`(`FileID`, `File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
-            VALUES (NULL,:file,:userID,:author,:filename,:serverFilename,`:size`,:mimetype,:description,NULL,0,`:date`,NULL,NULL,NULL,NULL)");
+            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
+            VALUES (:file,:userID,:author,:filename,:serverFilename,`:size`,:mimetype,:description,NULL,0,`:date`,NULL,NULL,NULL,NULL)");
             $stmt->bindValue(':file', $file->hentFile(), PDO::PARAM_LOB);
             $stmt->bindValue(':userID', $file->hentUserID(), PDO::PARAM_INT);
             $stmt->bindValue(':author', $file->hentAuthor(), PDO::PARAM_STR);
