@@ -1,5 +1,5 @@
 <?php
-    require_once('../auth_pdo.php');
+    require_once('../DB.class.php');
     require_once('File.class.php');
     require_once('FileInterface.php');
     require_once('FileRegister.class.php');
@@ -7,7 +7,7 @@
 
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
-    $fileRegister = new FileRegister($db);
+    $fileRegister = new FileRegister(DB::getDBConnection());
 
     // Med hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
     if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) {

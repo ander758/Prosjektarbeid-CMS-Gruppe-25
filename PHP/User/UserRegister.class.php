@@ -55,11 +55,13 @@ class UserRegister implements UserInterface {
 
     public function leggTilUser(User $user) : int {
         try {
-            $stmt = $this->db->prepare("INSERT INTO `User` (Username, Email, PassHash, FirstName, LastName) VALUES (:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
-            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
-            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
+            $stmt = $this->db->prepare("INSERT INTO `user` (UserID, Username, Email, PassHash, FirstName, LastName) 
+                VALUES (NULL,:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
+            $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->getEmail(), PDO::PARAM_STR);
+
             $stmt->bindValue(':fornavn', $user->hentForNan(), PDO::PARAM_STR);
-            $stmt->bindValue(':etternavn', $user->hentEtterNavn(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->getLastName(), PDO::PARAM_STR);
             $result = $stmt->execute();
             // TODO -> Her må vi ha sending av epost til ny bruker for opprettelse av ny User. Før execute kanskje
 
@@ -78,10 +80,10 @@ class UserRegister implements UserInterface {
         try {
             $stmt = $this->db->prepare("UPDATE User SET Username= :username, Email= :epost, FirstName= :fornavn, LastName= :etternavn WHERE UserID =:id"); // TODO -> Skal vi ha med 'SET PassHash' her?
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
-            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
-            $stmt->bindValue(':fornavn', $user->hentFornavn(), PDO::PARAM_STR);
-            $stmt->bindValue(':etternavn', $user->hentEtternavn(), PDO::PARAM_STR);
+            $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->getEmail(), PDO::PARAM_STR);
+            $stmt->bindValue(':fornavn', $user->getFirstName(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->getLastName(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
             if ($result) {

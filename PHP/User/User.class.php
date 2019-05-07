@@ -1,46 +1,109 @@
 <?php
-class user {
-    private $id;
+class User {
+    private $id=-1;
     private $username;
-    private $epost;
-    private $fornavn;
-    private $etternavn;
+    private $email;
+    private $firstName;
+    private $lastName;
+    private $loggedIn = false;
+    private $db;
 
-    function __construct() {
+    public function __construct(){}
+
+    //lets us create a new user with specified variables
+    public static function createUser($id, $username, $epost, $fornavn, $etternavn) {
+        $obj = new self();
+        $obj->id=$id;
+        $obj->username=$username;
+        $obj->email=$epost;
+        $obj->firstName=$fornavn;
+        $obj->lastName=$etternavn;
+        return obj;
     }
 
     // Getters
-    function hentId() {
+    public function getId() {
         return $this->id;
     }
-    function hentUsername() {
+    public function getUsername() {
         return $this->username;
     }
-    function hentEpost() {
-        return $this->epost;
+    function getEmail() {
+        return $this->email;
     }
-    function hentForNavn() {
-        return $this->fornavn;
+    function getFirstName() {
+        return $this->firstName;
     }
-    function hentEtterNavn() {
-        return $this->etternavn;
+    function getLastName() {
+        return $this->lastName;
     }
-    function hentNavn() {
-        return $this->fornavn . " " . $this->etternavn;
+    function getName() {
+        return $this->firstName . " " . $this->lastName;
     }
 
     // Setters
-    function settUsername($username) {
+    function setUsername($username) {
         $this->username = $username;
     }
-    function settEpost($epost) {
-        $this->epost = $epost;
+    function setEmail($email) {
+        $this->email = $email;
     }
-    function settForNavn($fornavn) {
-        $this->fornavn = $fornavn;
+    function setFirstName($firstName) {
+        $this->firstName = $firstName;
     }
-    function settEtterNavn($etterNavn) {
-        $this->etternavn = $etterNavn;
+
+    function setLastName($lastName) {
+        $this->lastName = $lastName;
     }
+
+
+    //copied from earlier assignments, checks if login data
+    //has been submitted, then calls the log-in method to
+    //log in the user
+    public function checkLogin($db) {
+
+        $this->db = $db;
+
+        if (isset($_POST['login'])) {
+            //sjekk om brukernavn og passord er riktig
+            return $this->login($_POST['username'], $_POST['password']);
+        } else if (isset($_POST['logout'])) {
+            unset($_SESSION['loggedIn']);
+            unset($_SESSION['id']);
+            unset($_SESSION['name']);
+            $this->loggedIn = false;
+        } else if (isset($_SESSION['loggedIn'])) {
+            $this->loggedIn = true;
+        }
+    }
+
+    //returns wether or not the current user is logged in
+    public function loggedIn() {
+        return $this->loggedIn;
+    }
+
+
+    //Tries to log in the user, returns error if the user doesn't exists or bad password
+    //Does not tell wether the username or password was wrong, to limit brute-force attacks somewhat
+    public function login($uname, $pwd) {
+        $stmt = $this->db->prepare("SELECT UserID, FirstName, LastName, PassHash FROM User WHERE Username=:username");
+        $stmt->bindParam(':username', $uname, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (password_verify($pwd, $row['PassHash'])) {
+                $_SESSION['id'] = $row['UserID'];
+                $this->id = $row['UserID'];
+                $_SESSION['name'] = ucfirst($row['FirstName']);
+                $_SESSION['loggedIn'] = true;
+                $this->loggedIn = true;
+                return array('status'=>'OK');
+            } else {
+                return array('status'=>'FAIL', 'errorMessage'=>'Bad password or user does not exist!');
+            }
+        } else {
+            return array('status'=>'FAIL', 'errorMessage'=>'Bad password or user does not exist!');
+        }
+    }
+
+
 }
-?>
