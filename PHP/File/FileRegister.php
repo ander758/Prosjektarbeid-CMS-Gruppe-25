@@ -13,7 +13,7 @@
     if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) {
         // Mediumblom max size = MEDIUMBLOB 16777215 bytes = 16.78 Mb
 
-        // Gather data
+        // Hent data
         $id = intval($_GET['id']); // UserID
         $name = $_FILES(['uploadedFile']['name']);
         $mime = $_FILES(['uploadedFile']['type']);
