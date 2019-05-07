@@ -50,7 +50,7 @@ class FileRegister implements FileInterface {
             $stmt->bindValue(':size', $file->hentFileSize(), PDO::PARAM_INT);
             $stmt->bindValue(':mimetype', $file->hentMimetype(), PDO::PARAM_STR);
             $stmt->bindValue(':description', $file->hentDescription(), PDO::PARAM_STR);
-            $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_INT);
+            $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
             if ($result) {
