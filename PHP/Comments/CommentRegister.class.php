@@ -23,7 +23,7 @@ class CommentRegister implements CommentInterface {
         return $comments;
     }
 
-    public function showAllCommentsFromFile(File $fileID): File
+    public function showAllCommentsFromFile(int $fileID): Comment
     {
         // TODO: Implement showAllCommentsFromFile() method.
     }
@@ -43,29 +43,33 @@ class CommentRegister implements CommentInterface {
 
     public function addComment(Comment $comment): int
     {
-        // Add comment to table `Comments`
-        try {
-            $stmt = $this->db->prepare("INSERT INTO `Comments`(`FileID`, `UserID`, `Date`, `Comment`) VALUES (:fileID, :userID, `:date`, :comment)");
-            $stmt->bindValue(':fileID', $comment->hentFileID(), PDO::PARAM_INT);
-            $stmt->bindValue(':userID', $comment->hentUserID(), PDO::PARAM_INT);
-            $stmt->bindValue(':date', $comment->hentDate(), PDO::PARAM_INT); // INT??????
-            $stmt->bindValue(':comment', $comment->hentComment(), PDO::PARAM_STR);
-            $result = $stmt->execute();
+        // Add comment to table `Comments` if under 250 in length
+        if (strlen($comment->getComment()) < 250) {
+            try {
+                $stmt = $this->db->prepare("INSERT INTO `Comments`(`FileID`, `UserID`, `Date`, `Comment`) VALUES (:fileID, :userID, `:date`, :comment)");
+                $stmt->bindValue(':fileID', $comment->hentFileID(), PDO::PARAM_INT);
+                $stmt->bindValue(':userID', $comment->hentUserID(), PDO::PARAM_INT);
+                $stmt->bindValue(':date', $comment->hentDate(), PDO::PARAM_STR);
+                $stmt->bindValue(':comment', $comment->hentComment(), PDO::PARAM_STR);
+                $result = $stmt->execute();
 
-            if ($result) {
-                return true;
-            } else {
-                echo "Feil ved innlegging av ny comment!";
-                return false;
+                if ($result) {
+                    return true;
+                } else {
+                    echo "Feil ved innlegging av ny comment!";
+                    return false;
+                }
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . PHP_EOL;
             }
-        } catch (InvalidArgumentException $e) {
-            print $e->getMessage() . PHP_EOL;
+        } else {
+            echo "For lang comment! Maks lengde er 250";
         }
     }
 
     public function deleteComment(Comment $comment, int $commentID): bool
     {
-        // TODO: Implement deleteComment() method.
+        // TODO: Må passe slettet comment til table `DeletedComments` !!
         // Delete specific comment by it's ID in table `Comments` and send it to table 'DeletedComments' along with origin Date
         try {
             // Delete specific comment

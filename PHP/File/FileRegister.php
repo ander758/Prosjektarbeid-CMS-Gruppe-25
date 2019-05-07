@@ -10,7 +10,7 @@
     $fileRegister = new FileRegister(DB::getDBConnection());
 
     // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
-    if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) {
+    if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) { // TODO -> Må sette inn skjult POST id for userID for opplasting av fil?
         // Mediumblom max size = MEDIUMBLOB 16777215 bytes = 16.78 Mb
 
         // Allowed file extensions
@@ -46,6 +46,15 @@
         } else {
             echo "Illegal file extension!";
         }
+    } elseif (isset($_POST['id']) && isset($_POST['submit_deleteFile'])) {
+        // Gather userID
+        $userID = intval($_GET['id']);
+
+
+
+
+
     }
+
 
     // TODO -> slettFil

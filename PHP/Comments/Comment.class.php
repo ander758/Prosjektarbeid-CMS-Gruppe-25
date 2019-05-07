@@ -11,24 +11,33 @@ class comment {
 
 
     // Getters
-    function hentCommentId() {
+    function getCommentId() {
         return $this->commentID;
     }
-    function hentFileID() {
+    function getFileID() {
         return $this->fileID;
     }
-    function hentUserID() {
+    function getUserID() {
         return $this->userID;
     }
-    function hentDate() {
+    function getDate() {
         return $this->date;
     }
-    function hentComment() {
+    function getComment() {
         return $this->comment;
     }
 
     // Setters
-    function settComment($comment) {
-        $this->comment = $comment;
+    function setFileID($fileID) {
+        $this->fileID = $fileID;
+    }
+    function setUserID($userID) {
+        $this->userID = $userID;
+    }
+    function setDate($date) {
+        $this->date = $date;
+    }
+    function setComment($commentContent) {
+        $this->comment = $commentContent;
     }
 }
