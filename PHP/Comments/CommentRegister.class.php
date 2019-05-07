@@ -13,6 +13,7 @@ class CommentRegister implements CommentInterface {
         try {
             $stmt = $this->db->query("SELECT * FROM Comments ORDER BY `Date` DESC");
             $stmt->execute();
+
             while ($comment = $stmt->fetchObject("Comment")) {
                 $comments = $comment;
             }
@@ -25,7 +26,21 @@ class CommentRegister implements CommentInterface {
 
     public function showAllCommentsFromFile(int $fileID): Comment
     {
-        // TODO: Implement showAllCommentsFromFile() method.
+        // Return all comments in given File by comment's FileID
+        $comments = array();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM Comments WHERE FileID = :fileID ORDER BY Date");
+            $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            while ($comment = $stmt->fetchObject("Comment")) {
+                $comments = $comment;
+            }
+            return $comments;
+        } catch (Exception $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return $comments;
     }
 
     public function showComment(int $commentID): Comment
@@ -69,7 +84,6 @@ class CommentRegister implements CommentInterface {
 
     public function deleteComment(Comment $comment, int $commentID): bool
     {
-        // Trenger ikke legge manuelt i `DeletedComments` pga. trigger som gjør det automatisk!
         // Delete specific comment by it's ID in table `Comments`
         try {
             // Delete $comment from table `Comments`
