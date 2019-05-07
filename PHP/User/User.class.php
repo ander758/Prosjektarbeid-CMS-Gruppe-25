@@ -80,10 +80,7 @@ class User {
             //sjekk om brukernavn og passord er riktig
             return $this->login($_POST['username'], $_POST['password']);
         } else if (isset($_POST['logout'])) {
-            unset($_SESSION['loggedIn']);
-            unset($_SESSION['id']);
-            unset($_SESSION['name']);
-            $this->loggedIn = false;
+            $this->logout();
         } else if (isset($_SESSION['loggedIn'])) {
             $this->loggedIn = true;
         }
@@ -120,6 +117,13 @@ class User {
         } else {
             return array('status'=>'FAIL', 'errorMessage'=>'Bad password or user does not exist!');
         }
+    }
+
+    public function logOut(){
+        unset($_SESSION['loggedIn']);
+        unset($_SESSION['id']);
+        unset($_SESSION['name']);
+        $this->loggedIn = false;
     }
 
 

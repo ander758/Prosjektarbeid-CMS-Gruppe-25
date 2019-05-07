@@ -17,3 +17,12 @@ Hvem som har gjort hva i repositoriet kan en se under Insights på github reposi
 | Mats-Erik Eriksen  -> Unicron2k       |
 | Saman Mohammed     -> Samandinho      |
 |_______________________________________|
+
+
+PHP v7.3.2
+Composer v1.8.5
+Symphony
+Twig/Twig v2.7-dev
+Bootstrap v4.3.1
+Neat - Åpent og gratis tema/webside utviklet av FreeHTML5.co
+Loginn-skjema: https://codepen.io/colorlib/pen/rxddKy
