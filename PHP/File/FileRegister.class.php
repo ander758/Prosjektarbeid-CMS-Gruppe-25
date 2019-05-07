@@ -6,7 +6,7 @@ class FileRegister implements FileInterface {
 		$this->db = $db;
 	}
 
-    public function visAlle(): array
+    public function showAllFiles(): array
     {
         $files = array();
         try {
@@ -23,7 +23,7 @@ class FileRegister implements FileInterface {
 
     }
 
-    public function visFil(int $id): File
+    public function showFile(int $id): File
     {
         // Gir File med gitt FileID
         try {
@@ -36,7 +36,7 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function leggTilFil(File $file): int
+    public function addFile(File $file): int
     {
         // Add file to table `File`
         try {
@@ -62,10 +62,9 @@ class FileRegister implements FileInterface {
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
-
     }
 
-    public function oppdaterFil(File $file, int $id): bool
+    public function updateFile(File $file, int $id): bool
     {
         try {
             $stmt = $this->db->prepare("UPDATE File SET Description= :description WHERE FileID= :fileID");
@@ -84,10 +83,10 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function slettFil(File $file, int $id): bool
+    public function deleteFile(File $file, int $id): bool
     {
         try {
-            $stmt = $this->db->prepare("DELETE FROM File Where FileID= :fileID");
+            $stmt = $this->db->prepare("DELETE FROM File Where FileID= :fileID"); // TODO -> Kan også slette alle comments med samme FileID fra slettet File
             $stmt->bindParam(':fileID', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
 

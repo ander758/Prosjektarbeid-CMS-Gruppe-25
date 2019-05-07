@@ -1,8 +1,8 @@
 <?php
 interface FileInterface {
-    public function visAlle() : array;                          // Returnerer arrary med File referanser
-    public function visFil(int $id) : File;                     // Returnerer referanse til File med angitt id
-    public function leggTilFil(File $file) : int;              // Returnerer id for nyopprettet File
-    public function oppdaterFil(File $file, int $id) : bool;    // Returnerer bool for status ved oppdatering av fil
-    public function slettFil(File $file, int $id) : bool;       // Returnerer bool for status ved sletting av fil
+    public function showAllFiles() : array;                 // Return array of all Files
+    public function showFile(int $id) : File;               // Return given File by it's ID
+    public function addFile(File $file) : int;              // Return ID for added File
+    public function updateFile(File $file, int $id) : bool; // Return bool for status for updating File
+    public function deleteFile(File $file, int $id) : bool; // Return bool for status of deleting File
 }

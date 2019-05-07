@@ -15,54 +15,57 @@ class file {
     }
 
     // Getters
-    function hentId() {
+    function getId() {
         return $this->id;
     }
-    function hentFile() {
+    function getFile() {
         return $this->file;
     }
-    function hentAuthor() {
+    function getAuthor() {
         return $this->author;
     }
-    function hentUserID() {
+    function getUserID() {
         return $this->userID;
     }
-    function hentFileName() {
+    function getFileName() {
         return $this->filename;
     }
-    function hentFileSize() {
+    function getFileSize() {
         return $this->fileSize;
     }
-    function hentMimetype() {
+    function getMimetype() {
         return $this->mimetype;
     }
-    function hentDescription() {
+    function getDescription() {
         return $this->description;
     }
-    function hentViews() {
+    function getViews() {
         return $this->views;
     }
-    function hentDate() {
+    function getDate() {
         return $this->date;
     }
 
     // Setters
-    function settFile($file) {
+    function setFile($file) {
         $this->file = $file;
     }
-    function settUserID($userID) {
+    function setUserID($userID) {
         $this->userID = $userID;
     }
-    function settFilename($filename) { // Trenger vi denne? https://php.net/manual/en/function.rename.php
+    function setFilename($filename) { // Trenger vi denne? https://php.net/manual/en/function.rename.php
         $this->filename = $filename;
     }
-    function settDescription($description) {
+    function setFileSize($fileSize) {
+        $this->fileSize = $fileSize;
+    }
+    function setDescription($description) {
         $this->description = $description;
     }
-    function settDate($date) {
+    function setDate($date) {
         $this->date = $date;
     }
-    function settMimetype($mimetype) {
+    function setMimetype($mimetype) {
         $this->mimetype = $mimetype;
     }
 }
