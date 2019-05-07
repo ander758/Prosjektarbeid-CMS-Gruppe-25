@@ -9,16 +9,28 @@
     $twig = new Twig_Environment($loader);
     $fileRegister = new FileRegister(DB::getDBConnection());
 
-    if (isset($_POST['id']) && isset($_POST['submit_fileToUpload'])) {
-        // Legg til fil
+    // Med hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
+    if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) {
         // Mediumblom max size = MEDIUMBLOB 16777215 bytes = 16.78 Mb
+
+        // Gather data
         $id = intval($_GET['id']); // UserID
+        $name = $_FILES(['uploadedFile']['name']);
+        $mime = $_FILES(['uploadedFile']['type']);
+        $data = file_get_contents($_FILES['uploadedFile']['tmp_name']);
         $description = filter_input(INPUT_POST, 'fileDescription', FILTER_SANITIZE_STRING);
 
+        // Lag fil Object
         $file = new file();
         $file->settUserID($id);
+        $file->settFilename($name);
+        $file->settMimetype($mime);
+        $file->settFile($data);
         $file->settDescription($description);
-        $fileRegister->leggTilFile($file);
+        $file->settDate(date("Y-m-d H:i:s"));
+
+        // Legg til $file
+        $fileRegister->leggTilFil($file);
     }
 
     // TODO -> slettFil

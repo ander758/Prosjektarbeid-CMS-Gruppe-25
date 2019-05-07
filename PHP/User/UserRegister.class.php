@@ -1,5 +1,6 @@
 <?php
 class UserRegister implements UserInterface {
+
 	private $db;
 	
 	public function __construct(PDO $db) {
@@ -11,7 +12,7 @@ class UserRegister implements UserInterface {
 		$users = array();
 
         try {
-            $stmt = $this->db->prepare("SELECT * FROM 'User'"); // TODO -> Ser ut som at 'User' er en SQL syntax her?
+            $stmt = $this->db->prepare("SELECT * FROM `User` ORDER BY ");
             $stmt->execute();
             while ($user = $stmt->fetchObject("User")) {
                 $users[] = $user;
@@ -23,12 +24,14 @@ class UserRegister implements UserInterface {
 		return $users;
     }
 
-    public function visAlleFiler(): array {
+    public function visAlleFiler(User $user): array {
         $files = array();
 
         try {
-            $stmt = $this->db->prepare("SELECT * FROM File");
+            $stmt = $this->db->prepare("SELECT * FROM File WHERE UserID= :userID ORDER BY `Date` DESC");
+            $stmt->bindParam(':userID', $user->hentId(), PDO::PARAM_INT);
             $stmt->execute();
+
             while ($file = $stmt->fetchObject("File")) {
                 $files[] = $file;
             }
@@ -41,7 +44,7 @@ class UserRegister implements UserInterface {
 
 	public function visUser(int $id) : User {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM User WHERE ID = :id");
+            $stmt = $this->db->prepare("SELECT * FROM `User` WHERE ID = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchObject("User");
@@ -50,18 +53,15 @@ class UserRegister implements UserInterface {
         }
     }
 
-    public function leggTilUser(User $user) : int { // TODO -> er å finne i signUp.php
+    public function leggTilUser(User $user) : int {
         try {
-            $stmt = $this->db->prepare("INSERT INTO `user` (UserID, Username, Email, PassHash, FirstName, LastName) 
-                VALUES (NULL,:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
-            $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
-            $stmt->bindValue(':epost', $user->getEmail(), PDO::PARAM_STR);
+            $stmt = $this->db->prepare("INSERT INTO `user` (Username, Email, PassHash, FirstName, LastName) VALUES (:username,:epost, NULL,:fornavn,:etternavn)"); // TODO -> PassHash her?
+            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
             $stmt->bindValue(':fornavn', $user->hentForNan(), PDO::PARAM_STR);
-            $stmt->bindValue(':etternavn', $user->getLastName(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->hentEtterNavn(), PDO::PARAM_STR);
             $result = $stmt->execute();
-
             // TODO -> Her må vi ha sending av epost til ny bruker for opprettelse av ny User. Før execute kanskje
-
 
             if ($result) {
                 return true;
@@ -78,10 +78,10 @@ class UserRegister implements UserInterface {
         try {
             $stmt = $this->db->prepare("UPDATE User SET Username= :username, Email= :epost, FirstName= :fornavn, LastName= :etternavn WHERE UserID =:id"); // TODO -> Skal vi ha med 'SET PassHash' her?
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
-            $stmt->bindValue(':epost', $user->getEmail(), PDO::PARAM_STR);
-            $stmt->bindValue(':fornavn', $user->getFirstName(), PDO::PARAM_STR);
-            $stmt->bindValue(':etternavn', $user->getLastName(), PDO::PARAM_STR);
+            $stmt->bindValue(':username', $user->hentUsername(), PDO::PARAM_STR);
+            $stmt->bindValue(':epost', $user->hentEpost(), PDO::PARAM_STR);
+            $stmt->bindValue(':fornavn', $user->hentFornavn(), PDO::PARAM_STR);
+            $stmt->bindValue(':etternavn', $user->hentEtternavn(), PDO::PARAM_STR);
             $result = $stmt->execute();
 
             if ($result) {
