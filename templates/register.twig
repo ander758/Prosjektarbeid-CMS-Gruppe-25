@@ -31,8 +31,11 @@
         <label for="psw-repeat"><b>Gjenta passord</b></label>
         <input type="password" placeholder="Gjenta passord" name="psw-repeat" required> <!--Husk å sjekke om passordene stemmer overens i signUp.php-->
 
+        {% if passNoMatch==true %}
+            <p>Passwords do not match!</p>
+        {% endif %}
         <div class="clearfix">
-            <button type="button" class="cancelbtn" name="cancel_signup">Avbryt</button> <!--Videresend til index-->
+            <a type="button" class="cancelbtn" name="cancel_signup" href="index.php">Avbryt</a> <!--Videresend til index-->
             <button type="submit" class="signupbtn" name="submit_signup">Registrer ny bruker</button>
         </div>
     </div>

@@ -1,4 +1,13 @@
 <?php
+
+
+
+//Merely used as code reference!
+//no other functionality associated!
+
+
+
+
     require_once('../DB.class.php');
     require_once('User.class.php');
     require_once('UserInterface.class.php');
@@ -7,7 +16,7 @@
 
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
-    $userregister = new UserRegister(DB::getDBConnection());
+    $userregister = new Users(DB::getDBConnection());
 
 
 
