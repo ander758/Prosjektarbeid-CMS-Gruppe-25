@@ -47,10 +47,10 @@ class CommentRegister implements CommentInterface {
         if (strlen($comment->getComment()) < 250) {
             try {
                 $stmt = $this->db->prepare("INSERT INTO `Comments`(`FileID`, `UserID`, `Date`, `Comment`) VALUES (:fileID, :userID, `:date`, :comment)");
-                $stmt->bindValue(':fileID', $comment->hentFileID(), PDO::PARAM_INT);
-                $stmt->bindValue(':userID', $comment->hentUserID(), PDO::PARAM_INT);
-                $stmt->bindValue(':date', $comment->hentDate(), PDO::PARAM_STR);
-                $stmt->bindValue(':comment', $comment->hentComment(), PDO::PARAM_STR);
+                $stmt->bindValue(':fileID', $comment->getFileID(), PDO::PARAM_INT);
+                $stmt->bindValue(':userID', $comment->getUserID(), PDO::PARAM_INT);
+                $stmt->bindValue(':date', $comment->getDate(), PDO::PARAM_STR);
+                $stmt->bindValue(':comment', $comment->getComment(), PDO::PARAM_STR);
                 $result = $stmt->execute();
 
                 if ($result) {
@@ -69,23 +69,15 @@ class CommentRegister implements CommentInterface {
 
     public function deleteComment(Comment $comment, int $commentID): bool
     {
-        // TODO: Må passe slettet comment til table `DeletedComments` !!
-        // Delete specific comment by it's ID in table `Comments` and send it to table 'DeletedComments' along with origin Date
+        // Trenger ikke legge manuelt i `DeletedComments` pga. trigger som gjør det automatisk!
+        // Delete specific comment by it's ID in table `Comments`
         try {
-            // Delete specific comment
-            $stmtDel = $this->db->prepare("DELETE FROM Comments WHERE CommentID = ::commentID");
-            $stmtDel->bindParam(':commentID', $commentID, PDO::PARAM_INT);
-            $resultAdd = $stmtDel->execute();
+            // Delete $comment from table `Comments`
+            $stmt = $this->db->prepare("DELETE FROM Comments WHERE CommentID = :commentID");
+            $stmt->bindParam(':commentID', $commentID, PDO::PARAM_INT);
+            $result = $stmt->execute();
 
-            // Send $comment to table `DeletedComments`
-            $stmtAdd = $this->db->prepare("INSERT INTO DeletedComments(CommentID, UserID, DeletedComment, DateDeleted) VALUES (:commentID, :userID, :deletedComment, :dateDeleted)");
-            $stmtDel->bindValue(':commentID', $commentID, PDO::PARAM_INT);
-            $stmtDel->bindValue(':userID', $comment->hentUserID(), PDO::PARAM_INT);
-            $stmtDel->bindValue(':deletedComment', $comment->hentComment(), PDO::PARAM_STR);
-            $stmtDel->bindValue(':dateDeleted', date("Y-m-d H:i:s"), PDO::PARAM_STR);
-            $resultDel = $stmtAdd->execute();
-
-            if ($resultAdd && $resultDel) {
+            if ($result) {
                 return true;
             } else {
                 echo "Feil ved sletting av comment!";

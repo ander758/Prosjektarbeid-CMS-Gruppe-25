@@ -8,6 +8,7 @@
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
     $commentRegister = new CommentRegister(DB::getDBConnection());
+    $deletedCommentRegister = new DeletedCommentRegister(DB::getDBConnection());
 
     if (isset($_POST['id']) && isset($_POST['submit_comment'])) {
         // Gather date from submitted Comment
@@ -26,3 +27,4 @@
         // Pass the object to $commentRegister to add it to the database
         $commentRegister->addComment($comment);
     }
+
