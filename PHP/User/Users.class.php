@@ -55,15 +55,17 @@ class Users implements UsersInterface {
 
     public function addUser(User $user) : int {
         try {
-            $stmt = $this->db->prepare("INSERT INTO `User` (Username, Email, PassHash, FirstName, LastName) VALUES (:username,:email,:passHash,:firstName,:lastName)"); // TODO -> PassHash her?
+            $stmt = $this->db->prepare("INSERT INTO `User` (Username, Email, PassHash, VerificationKey, FirstName, LastName) VALUES (:username,:email,:passHash,:verificationKey,:firstName,:lastName)"); // TODO -> PassHash her?
             $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
             $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
             $stmt->bindValue(':passHash', $user->getPassHash(), PDO::PARAM_STR);
+            $stmt->bindValue(':verificationKey', $user->getVerificationKey(), PDO::PARAM_STR);
             $stmt->bindValue(':firstName', $user->getFirstName(), PDO::PARAM_STR);
             $stmt->bindValue(':lastName', $user->getLastName(), PDO::PARAM_STR);
-            $result = $stmt->execute();
-            // TODO -> Her må vi ha sending av epost til ny bruker for opprettelse av ny User. Før execute kanskje
 
+            $result = $stmt->execute();
+
+            //TODO: return wether or not the user was created, and if not, why it failed
             if ($result) {
                 return true;
             } else {

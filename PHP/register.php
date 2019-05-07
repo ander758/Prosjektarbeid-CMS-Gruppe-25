@@ -3,6 +3,7 @@ require_once('DB.class.php');
 require_once('User/User.class.php');
 require_once('User/UsersInterface.class.php');
 require_once('User/Users.class.php');
+require_once('mailVerify.php');
 require_once '../vendor/autoload.php'; // ../ For relativ path
 
 $loader = new Twig_Loader_Filesystem('../templates'); // ../?
@@ -16,12 +17,17 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
         $firstName = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING);
         $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_STRING);
         $passHash = password_hash($_POST['psw'], PASSWORD_DEFAULT);
+        $key = md5(uniqid(rand(), 1)).md5(uniqid(rand(), 1));
 
         $user = User::createUser($username, $email, $firstName, $lastName);
         $user->setPassHash($passHash);
-        $users->addUser($user);
-
-        echo $twig->render('register.twig', array('registerSuccess' => true));
+        $user->setVerificationKey($key);
+        if($users->addUser($user)) {
+            sendVerificationMail($user->getEmail(), $user->getVerificationKey());
+            echo $twig->render('register.twig', array('registerSuccess' => true));
+        } else {
+            echo $twig->render('register.twig', array('registerSuccess' => false));
+        }
 
     } else {
         echo $twig->render('register.twig', array('passNoMatch' => true));

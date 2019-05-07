@@ -9,7 +9,6 @@ $twig = new Twig_Environment($loader, array(
 //    'cache' => './compilation_cache',
 ));
 
-
 if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR']){
 
     //todo: Create index template, and send relevant data

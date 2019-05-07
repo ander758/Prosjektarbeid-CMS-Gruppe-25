@@ -8,6 +8,7 @@ class User {
     private $loggedIn = false;
     private $db;
     private $passHash;
+    private $verificationKey;
 
     public function __construct(){}
 
@@ -40,9 +41,11 @@ class User {
     function getName() {
         return $this->firstName . " " . $this->lastName;
     }
-
     function getPassHash(){
         return $this->passHash;
+    }
+    public function getVerificationKey(){
+        return $this->verificationKey;
     }
 
     // Setters
@@ -59,9 +62,11 @@ class User {
     function setLastName($lastName) {
         $this->lastName = $lastName;
     }
-
     function setPassHash($passHash){
         $this->passHash=$passHash;
+    }
+    public function setVerificationKey($verificationKey){
+        $this->verificationKey = $verificationKey;
     }
 
     //copied from earlier assignments, checks if login data
