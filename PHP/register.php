@@ -12,6 +12,8 @@ $users = new Users(DB::getDBConnection());
 
 if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
     if(isset($_POST['psw']) && isset($_POST['psw-repeat']) && $_POST['psw'] == $_POST['psw-repeat']) {
+
+
         //TODO: verify information is correct before trying to register
 
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
@@ -26,14 +28,15 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
         $user->setVerificationKey($key);
         if($users->addUser($user)) {
             sendVerificationMail($user->getEmail(), $user->getVerificationKey());
-            echo $twig->render('main.twig', array('register'=>true, 'registerSuccess' => true));
             header( "refresh:5; url=index.php" );
+            echo $twig->render('main.twig', array('register'=>true, 'POST'=>$_POST, 'registerSuccess' => true));
+
         } else {
-            echo $twig->render('main.twig', array('register'=>true, 'registerSuccess' => false));
+            echo $twig->render('main.twig', array('register'=>true, 'POST'=>$_POST, 'registerSuccess' => false));
         }
 
     } else {
-        echo $twig->render('main.twig', array('register'=>true, 'passNoMatch' => true, 'registerSuccess' => false));
+        echo $twig->render('main.twig', array('register'=>true, 'passNoMatch' => true, 'POST'=>$_POST, 'registerSuccess' => false));
     }
 } elseif (isset($_POST['cancel_signup'])) {
     // Redirect back to index page...
@@ -41,6 +44,6 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
     // Exit current script
     die();
 } else {
-    echo $twig->render('main.twig', array('register'=>true, 'loggedIn' => false, 'registerSuccess' => false));
+    echo $twig->render('main.twig', array('register'=>true, 'loggedIn' => false, 'POST'=>$_POST, 'registerSuccess' => false));
 }
 ?>
