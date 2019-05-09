@@ -9,13 +9,14 @@
 
 {% if catalogues %}
 <!--Må sjekke om bruker er logget inn før en kan laste opp-->
-<form method="post" style="border: 1px solid #ccc">
+<form method="post" enctype="multipart/form-data" style="border: 1px solid #ccc">
     <div class="container">
         <h1>Last opp fil</h1>
         <p>Klikk 'Legg til fil' og 'Last opp' etter valgt fil</p>
 
+        <input type="hidden" name="MAX_FILE_SIZE" value="16777215">
         <label for="fileToUpload"><b>Velg ønsket fil fra din PC: </b></label>
-        <input type="file" name="uploadedFile"  placeholder="Velg fil" required> <br>
+        <input type="file" name="uploadedFile" placeholder="Velg fil" required> <br>
 
         <label for="fileDescription"><b>Beskrivelse av fil: </b></label>
         <input type="text" name="fileDescription" placeholder="Beskriv filen din" maxlength="45" required> <br>

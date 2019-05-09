@@ -49,35 +49,38 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function addFile(File $file, int $UserID): int
+    public function addFile(File $file, int $UserID)
     {
         // Add file to table `File`
         try {
-            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
-                                                            VALUES (`:file`,`:userID`,`:author`,`:filename`,`:serverFilename`,`:size`,`:mimetype`,`:description`, 0         ,0       ,current_timestamp(),`:access`,`:user_UserID`,`:catalogueID`,`:cataologue_CatalogueID`)");
+            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`)                                                            
+                                                            VALUES (:file,   :userID,  :author,  :filename,  :serverFilename,  :size,  :mimetype,  :description ,  0        ,   0    , :opprettet        ,:access  , :user_UserID , :catalogueID,:cataologue_CatalogueID)");
 
-            $stmt->bindParam(':file', $file->getFile(), PDO::PARAM_LOB); // TODO: LOB??
-            $stmt->bindParam(':userID', $file->getUserID(), PDO::PARAM_INT);
-            $stmt->bindParam(':author', $file->getAuthor(), PDO::PARAM_STR); // TODO: Make sure author is passed to obj $file
-            $stmt->bindParam(':filename', $file->getFileName(), PDO::PARAM_STR);
-            $stmt->bindParam(':serverFilename', $file->getFileName(), PDO::PARAM_STR); // TODO: Why do we need ServerFilename?
-            $stmt->bindParam(':size', $file->getSize(), PDO::PARAM_STR);
-            $stmt->bindParam(':mimetype', $file->getMimetype(), PDO::PARAM_STR);
-            $stmt->bindParam(':description', $file->getDescription(), PDO::PARAM_STR);
-            $stmt->bindParam(':access', $file->getAccess(), PDO::PARAM_INT);
-            $stmt->bindParam(':user_UserID', $file->getUserUserID(), PDO::PARAM_INT);
-            $stmt->bindParam(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
+            $opprettet = date("Y-m-d H:i:s");
+            $stmt->bindValue(':file', $file->getFile(), PDO::PARAM_LOB); // TODO: LOB??
+            $stmt->bindValue(':userID', $file->getUserID(), PDO::PARAM_INT);
+            $stmt->bindValue(':author', $file->getAuthor(), PDO::PARAM_STR); // TODO: Make sure author is passed to obj $file
+            $stmt->bindValue(':filename', $file->getFileName(), PDO::PARAM_STR);
+            $stmt->bindValue(':serverFilename', $file->getFileName(), PDO::PARAM_STR); // TODO: Why do we need ServerFilename?
+            $stmt->bindValue(':size', $file->getSize(), PDO::PARAM_INT);
+            $stmt->bindValue(':mimetype', $file->getMimetype(), PDO::PARAM_STR);
+            $stmt->bindParam(':opprettet', $opprettet);
+            $stmt->bindValue(':description', $file->getDescription(), PDO::PARAM_STR);
+            $stmt->bindValue(':access', $file->getAccess(), PDO::PARAM_INT);
+            $stmt->bindValue(':user_UserID', $file->getUserUserID(), PDO::PARAM_INT);
+            $stmt->bindValue(':catalogueID', $file->getCatalogueID(), PDO::PARAM_INT);
+            $stmt->bindValue(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
 
-            $result = $stmt->execute();
+
+            try {
+                $result = $stmt->execute();
+
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
 
 
             /*
-            $stmt = $this->db->prepare("INSERT INTO `TestFile`(`File`, `Description`, `Filename`) VALUES (:file,:description,:filename)");
-            $stmt->bindParam(':file', $file->getFile(), PDO::PARAM_STR);
-            $stmt->bindParam(':description',$file->getDescription(), PDO::PARAM_STR);
-            $stmt->bindParam('filename', $file->getFileName(), PDO::PARAM_STR);
-            $result = $stmt->execute();
-            */
             if ($result) {
                 alert("Fil lastet opp!");
                 return true;
@@ -88,6 +91,7 @@ class FileRegister implements FileInterface {
             function alert($msg) {
                 echo "<script type='text/javascript'>alert('$msg');</script>";
             }
+            */
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -192,7 +196,8 @@ class FileRegister implements FileInterface {
             $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
             $stmt->execute();
 
-            return $stmt;
+
+            return "Anders"; // TODO: Need to get string from table
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }

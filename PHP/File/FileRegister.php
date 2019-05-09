@@ -82,6 +82,7 @@
                 $file->setDescription($description);
                 $file->setAccess($access);
                 $file->setUserUserID($userID);
+                $file->setCatalogueID($catalogueID);
                 $file->setCatalogueCatalogueID($catalogueID);
 
                 $fileRegister->addFile($file, $userID);
