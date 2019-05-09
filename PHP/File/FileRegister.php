@@ -14,13 +14,14 @@
 
     $loader = new Twig_Loader_Filesystem('../../templates');
     $twig = new Twig_Environment($loader);
+
     $fileRegister = new FileRegister(DB::getDBConnection());
     $commentRegister = new CommentRegister(DB::getDBConnection());
 
     // Display all files test
     try {
         $files = $fileRegister->showAllFiles();
-        echo $twig->render('displayAllFilesExample.twig', array('files' => $files));
+        echo $twig->render('displayFilesExample.twig', array('files' => $files));
     } catch (Exception $e) {
         print "Could not show all files!" . $e->getMessage() . PHP_EOL;
     }
@@ -38,7 +39,7 @@
 
 
 
-    // Insert File to database
+    // Insert File to database if user is logged in
     if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR'] && isset($_POST['submit_fileUpload'])) { // TODO -> Må hente inn UserID for den som laster opp, om ikke allerede gjort under
         // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
 
@@ -59,7 +60,7 @@
                 $fileObj->setUserID($userID);
                 $fileObj->setAuthor("per"); //TODO: FIKS
                 $fileObj->setFilename($name);
-                $fileObj->setFileSize($size);
+                $fileObj->setSize($size);
                 $fileObj->setMimetype($type);
                 $fileObj->setDescription($description);
                 $fileObj->setDate(date("Y-m-d H:i:s"));

@@ -1,75 +1,75 @@
 <?php
 class file {
-    private $id;
-    private $file;
-    private $author; // ?
-    private $userID;
-    private $filename;
-    private $fileSize;
-    private $mimetype;
-    private $description;
-    private $views;
-    private $date;
+    private $FileID;
+    private $File;
+    private $Author; // ?
+    private $UserID;
+    private $Filename;
+    private $Size;
+    private $Mimetype;
+    private $Description;
+    private $Views;
+    private $Date;
 
     function __construct() {
     }
 
     // Getters
-    function getId() {
-        return $this->id;
+    function getFileID() {
+        return $this->FileID;
     }
     function getFile() {
-        return $this->file;
+        return $this->File;
     }
     function getAuthor() {
-        return $this->author;
+        return $this->Author;
     }
     function getUserID() {
-        return $this->userID;
+        return $this->UserID;
     }
     function getFileName() {
-        return $this->filename;
+        return $this->Filename;
     }
-    function getFileSize() {
-        return $this->fileSize;
+    function getSize() {
+        return $this->Size;
     }
     function getMimetype() {
-        return $this->mimetype;
+        return $this->Mimetype;
     }
     function getDescription() {
-        return $this->description;
+        return $this->Description;
     }
     function getViews() {
-        return $this->views;
+        return $this->Views;
     }
     function getDate() {
-        return $this->date;
+        return $this->Date;
     }
 
     // Setters
-    function setFile($file) {
-        $this->file = $file;
+    function setFile($File) {
+        $this->File = $File;
     }
-    function setAuthor($author) {
-        $this->author = $author;
+    function setAuthor($Author) {
+        $this->Author = $Author;
     }
     function setUserID($userID) {
         $this->userID = $userID;
     }
-    function setFilename($filename) { // Trenger vi denne? https://php.net/manual/en/function.rename.php
-        $this->filename = $filename;
+    function setFilename($Filename) { // Trenger vi denne? https://php.net/manual/en/function.rename.php
+        $this->Filename = $Filename;
     }
-    function setFileSize($fileSize) {
-        $this->fileSize = $fileSize;
+    function setSize($Size) {
+        $this->Size = $Size;
     }
-    function setDescription($description) {
-        $this->description = $description;
+    function setDescription($Description) {
+        $this->Description = $Description;
     }
-    function setDate($date) {
-        $this->date = $date;
+    function setDate($Date) {
+        $this->Date = $Date;
     }
-    function setMimetype($mimetype) {
-        $this->mimetype = $mimetype;
+    function setMimetype($Mimetype) {
+        $this->Mimetype = $Mimetype;
     }
 }
 ?>

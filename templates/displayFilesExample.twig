@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>displayAllFilesExample</title>
+</head>
+<body>
+<style>
+    .inline {
+        display: inline;
+    }
+</style>
+
+{% if files %}
+<ul>
+    {% for file in files %}
+        <li>
+            <p class="inline">Filnavn: {{ file.getFileName }}</p>
+            <p class="inline">Eier: {{ file.getAuthor }}</p>
+            <p class="inline">Størrelse: {{ file.getSize }}</p>
+            <p class="inline">Views: {{ file.getViews }}</p>
+            <p class="inline">Dato: {{ file.getDate }}</p> <br>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</body>
+</html>

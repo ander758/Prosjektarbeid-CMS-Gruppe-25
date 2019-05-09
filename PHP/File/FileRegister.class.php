@@ -8,13 +8,18 @@ class FileRegister implements FileInterface {
 
     public function showAllFiles(): array
     {
+        $files = array();
+
         try {
-            $stmt = $this->db->query("SELECT `File` FROM File ORDER BY `Date` DESC");
+            $stmt = $this->db->query("SELECT * FROM File ORDER BY Date");
             $stmt->execute();
-            return $stmt->fetchAll();
+            while ($file = $stmt->fetchObject("File")) {
+                $files[] = $file;
+            }
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }
+        return $files;
     }
 
     public function showFile(int $id): File
@@ -44,7 +49,7 @@ class FileRegister implements FileInterface {
             $stmt->bindParam(':author', $file->getAuthor(), PDO::PARAM_STR);
             $stmt->bindParam(':filename', $file->getFileName(), PDO::PARAM_STR);
             $stmt->bindParam(':serverFileName', $serverFileNameTest, PDO::PARAM_STR); //??
-            $stmt->bindParam(':size', $file->getFileSize(), PDO::PARAM_INT);
+            $stmt->bindParam(':size', $file->getSize(), PDO::PARAM_INT);
             $stmt->bindParam(':mimetype', $file->getMimetype(), PDO::PARAM_STR);
             $stmt->bindParam(':description', $file->getDescription(), PDO::PARAM_STR);
             //$stmt->bindParam(':date', $file->getDate(), PDO::PARAM_STR);

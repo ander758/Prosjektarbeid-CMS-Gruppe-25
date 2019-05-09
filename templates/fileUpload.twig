@@ -7,6 +7,7 @@
 </head>
 <body>
 
+{% if catalogues %}
 <!--Må sjekke om bruker er logget inn før en kan laste opp-->
 <form method="post" style="border: 1px solid #ccc">
     <div class="container">
@@ -19,10 +20,18 @@
         <label for="fileDescription"><b>Beskrivelse av fil: </b></label>
         <input type="text" name="fileDescription" placeholder="Beskriv filen din" maxlength="45" required>
 
+        <label for="fileCatalogue"><b>Velg ønsket katalog</b></label>
+        <select name="fileCatalogue">
+            {% for catalogue in catalogues %}
+                <option value="{{ catalogue.getCatalogueID }}">{{ catalogue.getName }}</option>
+            {% endfor %}
+        </select>
+
         <label for="submit_fileUpload"><b>Last opp</b></label>
         <input type="submit" name="sumbit_fileToUpload">
     </div>
 </form>
+{% endif %}
 
 </body>
 </html>

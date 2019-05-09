@@ -1,10 +1,10 @@
 <?php
 class comment {
-    private $commentID;
-    private $fileID;
-    private $userID; // ID to table 'USER'
-    private $date;
-    private $comment;
+    private $CommentID;
+    private $FileID;
+    private $UserID;
+    private $Date;
+    private $Comment;
 
     function __construct() {
     }
@@ -12,35 +12,35 @@ class comment {
 
     // Getters
     function getCommentId() {
-        return $this->commentID;
+        return $this->CommentID;
     }
     function getFileID() {
-        return $this->fileID;
+        return $this->FileID;
     }
     function getUserID() {
-        return $this->userID;
+        return $this->UserID;
     }
     function getDate() {
-        return $this->date;
+        return $this->Date;
     }
     function getComment() {
-        return $this->comment;
+        return $this->Comment;
     }
 
     // Setters
-    function setCommentID($commentID) {
-        $this->setCommentID($commentID);
+    function setCommentID($CommentID) {
+        $this->setCommentID($CommentID);
     }
-    function setFileID($fileID) {
-        $this->fileID = $fileID;
+    function setFileID($FileID) {
+        $this->FileID = $FileID;
     }
-    function setUserID($userID) {
-        $this->userID = $userID;
+    function setUserID($UserID) {
+        $this->UserID = $UserID;
     }
-    function setDate($date) {
-        $this->date = $date;
+    function setDate($Date) {
+        $this->Date = $Date;
     }
     function setComment($commentContent) {
-        $this->comment = $commentContent;
+        $this->Comment = $commentContent;
     }
 }
