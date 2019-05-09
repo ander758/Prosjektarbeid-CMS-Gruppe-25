@@ -9,34 +9,45 @@
     require_once('../Comments/Comment.class.php');
     require_once('../Comments/CommentInterface.php');
     require_once('../Comments/CommentRegister.class.php');
+    // Catalogue
+    require_once('../Catalogue/Catalogue.class.php');
+    require_once('../Catalogue/CatalogueInterface.class.php');
+    require_once('../Catalogue/CatalogueRegister.class.php');
 
+    // twig
     require_once('../../vendor/autoload.php');
-
     $loader = new Twig_Loader_Filesystem('../../templates');
     $twig = new Twig_Environment($loader);
 
+    // Registers
     $fileRegister = new FileRegister(DB::getDBConnection());
     $commentRegister = new CommentRegister(DB::getDBConnection());
+    $catalogueRegister = new CatalogueRegister(DB::getDBConnection());
 
-    // Display all files test
+
+
+    /*
+     * Display files depending on access
+     * logged in -> show ALL files   and   logged out -> show ONLY files with access=false
+     * */
+    if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') $access = 1; else $access = 0;
     try {
-        $files = $fileRegister->showAllFiles();
+        $files = $fileRegister->showAllFiles($access);
         echo $twig->render('displayFilesExample.twig', array('files' => $files));
     } catch (Exception $e) {
         print "Could not show all files!" . $e->getMessage() . PHP_EOL;
     }
 
-    echo "<form method=\"post\" style=\"border: 1px solid #ccc\">";
-    echo "<h1>Last opp fil</h1>";
-    echo "<label for=\"fileToUpload\"><b>Velg ønsket fil fra din PC: </b></label>";
-    echo "<input type=\"file\" name=\"uploadedFile\"  placeholder=\"Velg fil\" required>";
-    echo "<label for=\"fileDescription\"><b>Beskrivelse av fil: </b></label>";
-    echo "<input type=\"text\" name=\"fileDescription\" placeholder=\"Beskriv filen din\" maxlength=\"45\" required>";
-    echo "<label for=\"submit_fileUpload\"><b>Last opp</b></label>";
-    echo "<input type=\"submit\" name=\"sumbit_fileToUpload\">";
-    echo "</form>";
 
-
+    // Show file upload screen if logged in
+    if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
+        try {
+            $catalogues = $catalogueRegister->showAllCatalogues();
+            echo $twig->render('fileUpload.twig', array('catalogues' => $catalogues));
+        } catch (Exception $e) {
+            print "Could not show all catalogues!" . $e->getMessage() . PHP_EOL;
+        }
+    }
 
 
     // Insert File to database if user is logged in
@@ -44,28 +55,33 @@
         // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
 
         // Gather data
-        $userID = intval($_GET['id']);
-        $file = $_FILES['uploadedFile']['tmp_name'];
+        $userID = $_SESSION['id'];
+        $blob = $_FILES['uploadedFile']['tmp_name'];
         $name = $_FILES['uploadedFile']['name'];
         $type = $_FILES['uploadedFile']['type'];
         $size = $_FILES['uploadedFile']['size'];
+        $access = filter_input(INPUT_POST, 'fileAccess', FILTER_SANITIZE_NUMBER_INT);
+        $catalogueID = filter_input(INPUT_POST, 'fileCatalogue', FILTER_SANITIZE_NUMBER_INT);
         $description = filter_input(INPUT_POST, 'fileDescription', FILTER_SANITIZE_STRING);
 
-        if (is_uploaded_file($file) && $size != 0 && $size <= 512000) {
+        if (is_uploaded_file($blob) && $size != 0 && $size <= 16777215) {
             try {
-                $data = file_get_contents($file);
+                $data = file_get_contents($blob);
 
-                $fileObj = new file();
-                $fileObj->setFile($data);
-                $fileObj->setUserID($userID);
-                $fileObj->setAuthor("per"); //TODO: FIKS
-                $fileObj->setFilename($name);
-                $fileObj->setSize($size);
-                $fileObj->setMimetype($type);
-                $fileObj->setDescription($description);
-                $fileObj->setDate(date("Y-m-d H:i:s"));
+                $file = new file();
+                $file->setFile($data);
+                $file->setUserID($userID);
+                $file->setAuthor($fileRegister->fetchAuthor($userID));
+                $file->setFilename($name);
+                $file->setServerFilename($name);
+                $file->setSize($size);
+                $file->setMimetype($type);
+                $file->setDescription($description);
+                $file->setAccess($access);
+                $file->setUserUserID($userID);
+                $file->setCatalogueCatalogueID($catalogueID);
 
-                $fileRegister->addFile($fileObj);
+                $fileRegister->addFile($file, $userID);
             } catch (Exception $e) {
                 print $e->getMessage() . PHP_EOL;
             }

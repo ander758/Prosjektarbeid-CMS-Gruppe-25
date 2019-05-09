@@ -1,12 +1,20 @@
 <?php
     require_once ('../DB.class.php');
+    // Comment
     require_once ('Comment.class.php');
     require_once ('CommentInterface.php');
     require_once ('CommentRegister.php');
-    require_once ('../../vendor/autoload.php');
+    // DeletedComment
+    require_once('DeletedComment.class.php');
+    require_once('DeletedCommentInterface.php');
+    require_once('DeletedCommentRegister.class.php');
 
+    // twig
+    require_once ('../../vendor/autoload.php');
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
+
+    // Registers
     $commentRegister = new CommentRegister(DB::getDBConnection());
     $deletedCommentRegister = new DeletedCommentRegister(DB::getDBConnection());
 
