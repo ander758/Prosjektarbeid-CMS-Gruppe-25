@@ -25,6 +25,10 @@
     $catalogueRegister = new CatalogueRegister(DB::getDBConnection());
 
 
+    alert("Det er " . $fileRegister->countAllFiles() . " filer i tabellen File");
+    function alert($msg) {
+        echo "<script type='text/javascript'>alert('$msg');</script>";
+    }
 
     /*
      * Display files depending on access
@@ -35,7 +39,7 @@
         $files = $fileRegister->showAllFiles($access);
         echo $twig->render('displayFilesExample.twig', array('files' => $files));
     } catch (Exception $e) {
-        print "Could not show all files!" . $e->getMessage() . PHP_EOL;
+        print "Could not show files!" . $e->getMessage() . PHP_EOL;
     }
 
 
@@ -49,8 +53,7 @@
         }
     }
 
-
-    // Insert File to database if user is logged in
+    // Upload File to database
     if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR'] && isset($_POST['submit_fileUpload'])) { // TODO -> Må hente inn UserID for den som laster opp, om ikke allerede gjort under
         // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
 
@@ -88,11 +91,12 @@
         }
     }
 
+
     // Delete File from database
     if (isset($_POST['id']) && isset($_POST['submit_deleteFile'])) {
         // Gather UserID and FileID
         $fileID = -1; // TODO: Må finne FileID før vi sletter filen!!!
-        $userID = intval($_GET['id']);
+        $userID = $_SESSION['id'];
 
         // Check if userID is owner of file to delete
         if ($fileRegister->isFileOwner($fileID, $userID)){

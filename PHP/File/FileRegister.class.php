@@ -79,11 +79,14 @@ class FileRegister implements FileInterface {
             $result = $stmt->execute();
             */
             if ($result) {
-                echo "Filen er lastet opp!";
+                alert("Fil lastet opp!");
                 return true;
             } else {
-                echo "Feil ved innlegging av fil!";
+                alert("Fil ble ikke lastet opp!");
                 return false;
+            }
+            function alert($msg) {
+                echo "<script type='text/javascript'>alert('$msg');</script>";
             }
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
@@ -148,16 +151,18 @@ class FileRegister implements FileInterface {
 
     public function countAllFiles(): int
     {
-        // Return number of files in database as int
+        $files = array();
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) FROM Files");
+            $stmt = $this->db->query("SELECT FileID FROM File");
             $stmt->execute();
+            while ($file = $stmt->fetchObject("File"))
+                $files[] = $file;
+            $count = count($files);
 
-            // Return number of rows in table `Files`
-            return $stmt;
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
+        return $count;
     }
 
     public function isFileOwner(int $fileID, int $userID): bool

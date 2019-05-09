@@ -12,7 +12,8 @@
 </style>
 
 {% if files %}
-<ul>
+    <h1>Filer:</h1>
+    <ul>
     {% for file in files %}
         <li>
             <p class="inline">Filnavn: {{ file.getFileName }}</p>
