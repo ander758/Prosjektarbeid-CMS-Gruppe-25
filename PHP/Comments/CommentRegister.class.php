@@ -101,4 +101,5 @@ class CommentRegister implements CommentInterface {
             print $e->getMessage() . PHP_EOL;
         }
     }
+
 }

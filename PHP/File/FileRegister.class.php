@@ -120,4 +120,18 @@ class FileRegister implements FileInterface {
         }
         return $files;
     }
+
+    public function countAllFiles(): int
+    {
+        // Return number of files in database as int
+        try {
+            $stmt = $this->db->prepare("SELECT COUNT(*) FROM Files");
+            $stmt->execute();
+
+            // Return number of rows on table `Files`
+            return $stmt;
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
 }
