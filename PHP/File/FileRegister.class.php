@@ -84,11 +84,11 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function deleteFile(File $file, int $id): bool
+    public function deleteFile(int $fileID): bool
     {
         try {
             $stmt = $this->db->prepare("DELETE FROM File Where FileID= :fileID"); // TODO -> Kan også slette alle comments med samme FileID fra slettet File
-            $stmt->bindParam(':fileID', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
             $result = $stmt->execute();
 
             if ($result) {
@@ -128,8 +128,27 @@ class FileRegister implements FileInterface {
             $stmt = $this->db->prepare("SELECT COUNT(*) FROM Files");
             $stmt->execute();
 
-            // Return number of rows on table `Files`
+            // Return number of rows in table `Files`
             return $stmt;
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
+
+    public function isFileOwner(int $fileID, int $userID): bool
+    {
+        // Check if the UserID from fetched result from table `Files` equals $userID
+        try {
+            $stmt = $this->db->prepare("SELECT UserID FROM Files WHERE FileID = :fileID");
+            $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt == $userID) {
+                return true;
+            } else {
+                echo "Could not delete file, not authorized!";
+                return false;
+            }
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }

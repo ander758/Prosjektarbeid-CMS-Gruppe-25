@@ -9,12 +9,12 @@
     $twig = new Twig_Environment($loader);
     $fileRegister = new FileRegister(DB::getDBConnection());
 
-    // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
     if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) { // TODO -> Må sette inn skjult POST id for userID for opplasting av fil?
+        // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
         // Mediumblom max size = MEDIUMBLOB 16777215 bytes = 16.78 Mb
 
-        // Allowed file extensions
-        $allowedExtensions = array("jpeg","jpg","png","txt","html","php","gif", "zip", "pdf", "exe", "msi");
+        // Allowed file extensions, add more if needed
+        $allowedExtensions = array("jpeg","jpg","png","txt","html","php","gif", "zip", "pdf", "exe", "msi", "java");
 
         // Gather data
         $userID = intval($_GET['id']); // UserID
@@ -44,17 +44,16 @@
                 echo "File size limit is 16.78 Mb!";
             }
         } else {
-            echo "Illegal file extension!";
+            echo "Allowed file extensions: " . implode(", ", $allowedExtensions);
         }
     } elseif (isset($_POST['id']) && isset($_POST['submit_deleteFile'])) {
-        // Gather userID
+        // Gather UserID and FileID
+        $fileID = -1; // TODO: Find FileID of file to delete
         $userID = intval($_GET['id']);
 
-
-
-
-
+        // Check if userID is owner of file to delete
+        if ($fileRegister->isFileOwner($fileID, $userID))
+            $fileRegister->deleteFile($fileID);
+        else
+            echo "Could not delete!";
     }
-
-
-    // TODO -> slettFil

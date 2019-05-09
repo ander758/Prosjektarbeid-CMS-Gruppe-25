@@ -15,7 +15,6 @@ Hvem som har gjort hva i repositoriet kan en se under Insights på github reposi
 |                                       |
 | Anders Rubach Ese  -> Ander758        |
 | Mats-Erik Eriksen  -> Unicron2k       |
-| Saman Mohammed     -> Samandinho      |
 |_______________________________________|
 
 
