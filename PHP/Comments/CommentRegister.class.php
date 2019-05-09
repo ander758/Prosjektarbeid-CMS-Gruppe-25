@@ -11,7 +11,7 @@ class CommentRegister implements CommentInterface {
         // Return all comments from table `Comments`
         $comments = array();
         try {
-            $stmt = $this->db->query("SELECT * FROM Comments ORDER BY `Date` DESC");
+            $stmt = $this->db->query("SELECT * FROM Comments ORDER BY `Date` DESC"); // TODO: FIX like File and Catalogue
             $stmt->execute();
 
             while ($comment = $stmt->fetchObject("Comment")) {
