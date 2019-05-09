@@ -102,4 +102,22 @@ class CommentRegister implements CommentInterface {
         }
     }
 
+    public function deleteAllCommentsFromFile(int $fileID): bool
+    {
+        // Delete all comments in table `Comments` with certain FileID
+        try {
+            $stmt = $this->db->prepare("DELETE FROM Comments Where FileID = :fileID");
+            $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result)
+                return true;
+            else {
+                echo "Feil ved sletting av Comments i gitt File";
+                return false;
+            }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
 }

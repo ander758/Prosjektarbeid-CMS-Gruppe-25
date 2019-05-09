@@ -50,6 +50,9 @@ class file {
     function setFile($file) {
         $this->file = $file;
     }
+    function setAuthor($author) {
+        $this->author = $author;
+    }
     function setUserID($userID) {
         $this->userID = $userID;
     }

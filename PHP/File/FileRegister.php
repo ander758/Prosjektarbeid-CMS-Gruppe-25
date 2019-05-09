@@ -1,59 +1,89 @@
 <?php
+    session_start();
     require_once('../DB.class.php');
+    // File
     require_once('File.class.php');
     require_once('FileInterface.php');
     require_once('FileRegister.class.php');
+    // Comments
+    require_once('../Comments/Comment.class.php');
+    require_once('../Comments/CommentInterface.php');
+    require_once('../Comments/CommentRegister.class.php');
+
     require_once('../../vendor/autoload.php');
 
-    $loader = new Twig_Loader_Filesystem('../templates');
+    $loader = new Twig_Loader_Filesystem('../../templates');
     $twig = new Twig_Environment($loader);
     $fileRegister = new FileRegister(DB::getDBConnection());
+    $commentRegister = new CommentRegister(DB::getDBConnection());
 
-    if (isset($_POST['id']) && isset($_POST['submit_fileUpload'])) { // TODO -> Må sette inn skjult POST id for userID for opplasting av fil?
+    // Display all files test
+    try {
+        $files = $fileRegister->showAllFiles();
+        echo $twig->render('displayAllFilesExample.twig', array('files' => $files));
+    } catch (Exception $e) {
+        print "Could not show all files!" . $e->getMessage() . PHP_EOL;
+    }
+
+    echo "<form method=\"post\" style=\"border: 1px solid #ccc\">";
+    echo "<h1>Last opp fil</h1>";
+    echo "<label for=\"fileToUpload\"><b>Velg ønsket fil fra din PC: </b></label>";
+    echo "<input type=\"file\" name=\"uploadedFile\"  placeholder=\"Velg fil\" required>";
+    echo "<label for=\"fileDescription\"><b>Beskrivelse av fil: </b></label>";
+    echo "<input type=\"text\" name=\"fileDescription\" placeholder=\"Beskriv filen din\" maxlength=\"45\" required>";
+    echo "<label for=\"submit_fileUpload\"><b>Last opp</b></label>";
+    echo "<input type=\"submit\" name=\"sumbit_fileToUpload\">";
+    echo "</form>";
+
+
+
+
+    // Insert File to database
+    if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR'] && isset($_POST['submit_fileUpload'])) { // TODO -> Må hente inn UserID for den som laster opp, om ikke allerede gjort under
         // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
-        // Mediumblom max size = MEDIUMBLOB 16777215 bytes = 16.78 Mb
-
-        // Allowed file extensions, add more if needed
-        $allowedExtensions = array("jpeg","jpg","png","txt","html","php","gif", "zip", "pdf", "exe", "msi", "java");
 
         // Gather data
-        $userID = intval($_GET['id']); // UserID
-        $name = $_FILES['uploadedFile']['name']; // File's name
-        $mime = $_FILES['uploadedFile']['type'];
-        $temporaryFile = file_get_contents($_FILES['uploadedFile']['tmp_name']); // Temporary file for later Insertion to database
+        $userID = intval($_GET['id']);
+        $file = $_FILES['uploadedFile']['tmp_name'];
+        $name = $_FILES['uploadedFile']['name'];
+        $type = $_FILES['uploadedFile']['type'];
+        $size = $_FILES['uploadedFile']['size'];
         $description = filter_input(INPUT_POST, 'fileDescription', FILTER_SANITIZE_STRING);
-        $file_size = $_FILES['submit_fileUpload']['size']; // File's size
 
-        // Check if allowed file extensions
-        $fileExtension = strtolower(end(explode('.', $_FILES['uploadedFile']['name']))); // File's extension
-        if (in_array($fileExtension, $allowedExtensions)) {
-            // Add the file object to database
-            $file = new file();
-            $file->setUserID($userID);
-            $file->setFilename($name);
-            $file->setFileSize($file_size);
-            $file->setMimetype($mime);
-            $file->setFile($temporaryFile);
-            $file->setDescription($description);
-            $file->setDate(date("Y-m-d H:i:s"));
+        if (is_uploaded_file($file) && $size != 0 && $size <= 512000) {
+            try {
+                $data = file_get_contents($file);
 
-            // Cancel operation if file size over MEDIUMBLOB limit = 16777215 bytes
-            if ($file->getFileSize() < 16777215) {
-                $fileRegister->addFile($file);
-            } else {
-                echo "File size limit is 16.78 Mb!";
+                $fileObj = new file();
+                $fileObj->setFile($data);
+                $fileObj->setUserID($userID);
+                $fileObj->setAuthor("per"); //TODO: FIKS
+                $fileObj->setFilename($name);
+                $fileObj->setFileSize($size);
+                $fileObj->setMimetype($type);
+                $fileObj->setDescription($description);
+                $fileObj->setDate(date("Y-m-d H:i:s"));
+
+                $fileRegister->addFile($fileObj);
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
             }
-        } else {
-            echo "Allowed file extensions: " . implode(", ", $allowedExtensions);
         }
-    } elseif (isset($_POST['id']) && isset($_POST['submit_deleteFile'])) {
+    }
+
+    // Delete File from database
+    if (isset($_POST['id']) && isset($_POST['submit_deleteFile'])) {
         // Gather UserID and FileID
-        $fileID = -1; // TODO: Find FileID of file to delete
+        $fileID = -1; // TODO: Må finne FileID før vi sletter filen!!!
         $userID = intval($_GET['id']);
 
         // Check if userID is owner of file to delete
-        if ($fileRegister->isFileOwner($fileID, $userID))
+        if ($fileRegister->isFileOwner($fileID, $userID)){
+            // Delete certain File
             $fileRegister->deleteFile($fileID);
+            // Delete all comments in certain File
+            $commentRegister->deleteAllCommentsFromFile($fileID);
+        }
         else
-            echo "Could not delete!";
+            echo "Could not delete file!";
     }
