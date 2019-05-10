@@ -71,16 +71,8 @@ class FileRegister implements FileInterface {
             $stmt->bindValue(':catalogueID', $file->getCatalogueID(), PDO::PARAM_INT);
             $stmt->bindValue(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
 
+            $result = $stmt->execute();
 
-            try {
-                $result = $stmt->execute();
-
-            } catch (Exception $e) {
-                print $e->getMessage() . PHP_EOL;
-            }
-
-
-            /*
             if ($result) {
                 alert("Fil lastet opp!");
                 return true;
@@ -91,7 +83,7 @@ class FileRegister implements FileInterface {
             function alert($msg) {
                 echo "<script type='text/javascript'>alert('$msg');</script>";
             }
-            */
+
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -144,9 +136,8 @@ class FileRegister implements FileInterface {
             $stmt->execute();
 
             while ($file = $stmt->fetchObject("File")) {
-                $files = $file;
+                $files[] = $file;
             }
-            return $files;
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -159,10 +150,10 @@ class FileRegister implements FileInterface {
         try {
             $stmt = $this->db->query("SELECT FileID FROM File");
             $stmt->execute();
-            while ($file = $stmt->fetchObject("File"))
+            while ($file = $stmt->fetchObject("File")) {
                 $files[] = $file;
+            }
             $count = count($files);
-
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -175,8 +166,8 @@ class FileRegister implements FileInterface {
         try {
             $stmt = $this->db->prepare("SELECT UserID FROM Files WHERE FileID = :fileID");
             $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
-            $stmt->execute();
-
+            //$stmt->execute();
+            $stmt->fetch(PDO::FETCH_ASSOC);
             if ($stmt == $userID) {
                 return true;
             } else {
@@ -190,14 +181,72 @@ class FileRegister implements FileInterface {
 
     public function fetchAuthor(int $userID): string
     {
-        // TODO: Check if works
         try {
             $stmt = $this->db->prepare("SELECT Author FROM User WHERE UserID = :userID");
             $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
             $stmt->execute();
 
+            return $stmt->fetch(PDO::PARAM_STR);
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
 
-            return "Anders"; // TODO: Need to get string from table
+    public function showLatestFiles(int $access): array {
+        if ($access == 1) {
+            // Return all
+            $files = array();
+            try {
+                $stmt = $this->db->prepare("SELECT * FROM File ORDER BY Date DESC LIMIT 5");
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
+            return $files;
+        } else if ($access == 0) {
+            // Return open files
+            $files = array();
+            try {
+                $stmt = $this->db->prepare("SELECT * FROM File WHERE Access = :access ORDER BY Date DESC LIMIT 5");
+                $stmt->bindParam(':access', $access);
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
+            return $files;
+        }
+    }
+
+    public function showUsersFiles(int $UserID): array
+    {
+        $files = array();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM File WHERE UserID = :userID");
+            $stmt->bindParam(':userID', $UserID);
+            $stmt->execute();
+            while ($file = $stmt->fetchObject("File")) {
+                $files[] = $file;
+            }
+        } catch (Exception $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return $files;
+    }
+
+    public function fetchFileCatalogue(int $CatalogueID): string
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT Name FROM Cataologue WHERE CatalogueID = :catalogueID");
+            $stmt->bindParam(':catalogueID', $CatalogueID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::PARAM_STR);
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }

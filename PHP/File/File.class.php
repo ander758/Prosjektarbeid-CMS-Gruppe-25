@@ -123,6 +123,10 @@ class file {
     {
         return $this->Size;
     }
+    public function getSizeInMb()
+    {
+        return round(($this->Size) * pow(2, -20), 2) ;// n bytes =  n * 2^-20 Mb;
+    }
 
     /**
      * @param mixed $Size
