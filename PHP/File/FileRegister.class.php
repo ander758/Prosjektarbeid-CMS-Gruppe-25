@@ -6,21 +6,33 @@ class FileRegister implements FileInterface {
 		$this->db = $db;
 	}
 
-    public function showAllFiles(): array
+    public function showAllFiles(int $access): array
     {
         $files = array();
-        try {
-            $stmt = $this->db->query("SELECT * FROM File ORDER BY `Date` DESC");
-            $stmt->execute();
-            while ($file = $stmt->fetchObject("File")) {
-                $files = $file;
+
+        if ($access == 0) {
+            try {
+                $stmt = $this->db->query("SELECT * FROM File WHERE Access=0 ORDER BY Date");
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
             }
             return $files;
-        } catch (Exception $e) {
-            print $e->getMessage() . PHP_EOL;
+        } else if ($access == 1) {
+            try {
+                $stmt = $this->db->query("SELECT * FROM File ORDER BY Date");
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
+            return $files;
         }
-        return $files;
-
     }
 
     public function showFile(int $id): File
@@ -37,29 +49,41 @@ class FileRegister implements FileInterface {
         }
     }
 
-    public function addFile(File $file): int
+    public function addFile(File $file, int $UserID)
     {
         // Add file to table `File`
         try {
-            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`, `Access`, `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`) 
-            VALUES (:file,:userID,:author,:filename,:serverFilename,`:size`,:mimetype,:description,NULL,0,`:date`,NULL,NULL,NULL,NULL)");
-            $stmt->bindValue(':file', $file->hentFile(), PDO::PARAM_LOB);
-            $stmt->bindValue(':userID', $file->hentUserID(), PDO::PARAM_INT);
-            $stmt->bindValue(':author', $file->hentAuthor(), PDO::PARAM_STR);
-            $stmt->bindValue(':filename', $file->hentFileName(), PDO::PARAM_STR);
-            $stmt->bindValue(':serverFileName', NULL, PDO::PARAM_NULL); //??
-            $stmt->bindValue(':size', $file->hentFileSize(), PDO::PARAM_INT);
-            $stmt->bindValue(':mimetype', $file->hentMimetype(), PDO::PARAM_STR);
-            $stmt->bindValue(':description', $file->hentDescription(), PDO::PARAM_STR);
-            $stmt->bindValue(':date', $file->hentDate(), PDO::PARAM_STR);
+            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`)                                                            
+                                                            VALUES (:file,   :userID,  :author,  :filename,  :serverFilename,  :size,  :mimetype,  :description ,  0        ,   0    , :opprettet        ,:access  , :user_UserID , :catalogueID,:cataologue_CatalogueID)");
+
+            $opprettet = date("Y-m-d H:i:s");
+            $stmt->bindValue(':file', $file->getFile(), PDO::PARAM_LOB); // TODO: LOB??
+            $stmt->bindValue(':userID', $file->getUserID(), PDO::PARAM_INT);
+            $stmt->bindValue(':author', $file->getAuthor(), PDO::PARAM_STR); // TODO: Make sure author is passed to obj $file
+            $stmt->bindValue(':filename', $file->getFileName(), PDO::PARAM_STR);
+            $stmt->bindValue(':serverFilename', $file->getFileName(), PDO::PARAM_STR); // TODO: Why do we need ServerFilename?
+            $stmt->bindValue(':size', $file->getSize(), PDO::PARAM_INT);
+            $stmt->bindValue(':mimetype', $file->getMimetype(), PDO::PARAM_STR);
+            $stmt->bindParam(':opprettet', $opprettet);
+            $stmt->bindValue(':description', $file->getDescription(), PDO::PARAM_STR);
+            $stmt->bindValue(':access', $file->getAccess(), PDO::PARAM_INT);
+            $stmt->bindValue(':user_UserID', $file->getUserUserID(), PDO::PARAM_INT);
+            $stmt->bindValue(':catalogueID', $file->getCatalogueID(), PDO::PARAM_INT);
+            $stmt->bindValue(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
+
             $result = $stmt->execute();
 
             if ($result) {
+                alert("Fil lastet opp!");
                 return true;
             } else {
-                echo "Feil ved innlegging av fil!";
+                alert("Fil ble ikke lastet opp!");
                 return false;
             }
+            function alert($msg) {
+                echo "<script type='text/javascript'>alert('$msg');</script>";
+            }
+
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -87,7 +111,7 @@ class FileRegister implements FileInterface {
     public function deleteFile(int $fileID): bool
     {
         try {
-            $stmt = $this->db->prepare("DELETE FROM File Where FileID= :fileID"); // TODO -> Kan også slette alle comments med samme FileID fra slettet File
+            $stmt = $this->db->prepare("DELETE FROM File Where FileID= :fileID");
             $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
             $result = $stmt->execute();
 
@@ -112,9 +136,8 @@ class FileRegister implements FileInterface {
             $stmt->execute();
 
             while ($file = $stmt->fetchObject("File")) {
-                $files = $file;
+                $files[] = $file;
             }
-            return $files;
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -123,16 +146,18 @@ class FileRegister implements FileInterface {
 
     public function countAllFiles(): int
     {
-        // Return number of files in database as int
+        $files = array();
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) FROM Files");
+            $stmt = $this->db->query("SELECT FileID FROM File");
             $stmt->execute();
-
-            // Return number of rows in table `Files`
-            return $stmt;
+            while ($file = $stmt->fetchObject("File")) {
+                $files[] = $file;
+            }
+            $count = count($files);
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
+        return $count;
     }
 
     public function isFileOwner(int $fileID, int $userID): bool
@@ -141,14 +166,87 @@ class FileRegister implements FileInterface {
         try {
             $stmt = $this->db->prepare("SELECT UserID FROM Files WHERE FileID = :fileID");
             $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
-            $stmt->execute();
-
+            //$stmt->execute();
+            $stmt->fetch(PDO::FETCH_ASSOC);
             if ($stmt == $userID) {
                 return true;
             } else {
                 echo "Could not delete file, not authorized!";
                 return false;
             }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
+
+    public function fetchAuthor(int $userID): string
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT Author FROM User WHERE UserID = :userID");
+            $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::PARAM_STR);
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
+
+    public function showLatestFiles(int $access): array {
+        if ($access == 1) {
+            // Return all
+            $files = array();
+            try {
+                $stmt = $this->db->prepare("SELECT * FROM File ORDER BY Date DESC LIMIT 5");
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
+            return $files;
+        } else if ($access == 0) {
+            // Return open files
+            $files = array();
+            try {
+                $stmt = $this->db->prepare("SELECT * FROM File WHERE Access = :access ORDER BY Date DESC LIMIT 5");
+                $stmt->bindParam(':access', $access);
+                $stmt->execute();
+                while ($file = $stmt->fetchObject("File")) {
+                    $files[] = $file;
+                }
+            } catch (Exception $e) {
+                print $e->getMessage() . PHP_EOL;
+            }
+            return $files;
+        }
+    }
+
+    public function showUsersFiles(int $UserID): array
+    {
+        $files = array();
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM File WHERE UserID = :userID");
+            $stmt->bindParam(':userID', $UserID);
+            $stmt->execute();
+            while ($file = $stmt->fetchObject("File")) {
+                $files[] = $file;
+            }
+        } catch (Exception $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return $files;
+    }
+
+    public function fetchFileCatalogue(int $CatalogueID): string
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT Name FROM Cataologue WHERE CatalogueID = :catalogueID");
+            $stmt->bindParam(':catalogueID', $CatalogueID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::PARAM_STR);
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }

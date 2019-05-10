@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>displayAllFilesExample</title>
+</head>
+<body>
+
+{% if files %}
+<ul>
+    {% for file in files %}
+        <li>
+            <p>{{ file.getFileName }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</body>
+</html>

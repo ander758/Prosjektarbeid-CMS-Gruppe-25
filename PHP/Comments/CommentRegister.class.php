@@ -11,7 +11,7 @@ class CommentRegister implements CommentInterface {
         // Return all comments from table `Comments`
         $comments = array();
         try {
-            $stmt = $this->db->query("SELECT * FROM Comments ORDER BY `Date` DESC");
+            $stmt = $this->db->query("SELECT * FROM Comments ORDER BY `Date` DESC"); // TODO: FIX like File and Catalogue
             $stmt->execute();
 
             while ($comment = $stmt->fetchObject("Comment")) {
@@ -102,4 +102,22 @@ class CommentRegister implements CommentInterface {
         }
     }
 
+    public function deleteAllCommentsFromFile(int $fileID): bool
+    {
+        // Delete all comments in table `Comments` with certain FileID
+        try {
+            $stmt = $this->db->prepare("DELETE FROM Comments Where FileID = :fileID");
+            $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result)
+                return true;
+            else {
+                echo "Feil ved sletting av Comments i gitt File";
+                return false;
+            }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+    }
 }

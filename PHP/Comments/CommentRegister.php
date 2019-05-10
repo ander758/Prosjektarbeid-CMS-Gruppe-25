@@ -1,12 +1,20 @@
 <?php
     require_once ('../DB.class.php');
+    // Comment
     require_once ('Comment.class.php');
     require_once ('CommentInterface.php');
     require_once ('CommentRegister.php');
-    require_once ('../../vendor/autoload.php');
+    // DeletedComment
+    require_once('DeletedComment.class.php');
+    require_once('DeletedCommentInterface.php');
+    require_once('DeletedCommentRegister.class.php');
 
+    // twig
+    require_once ('../../vendor/autoload.php');
     $loader = new Twig_Loader_Filesystem('../templates');
     $twig = new Twig_Environment($loader);
+
+    // Registers
     $commentRegister = new CommentRegister(DB::getDBConnection());
     $deletedCommentRegister = new DeletedCommentRegister(DB::getDBConnection());
 
@@ -30,8 +38,7 @@
     } elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
         // Gather data from comment to delete
         $userID = intval($_GET['id']);
-        //$commentID = TODO: Need to find ID for comment to remove
-        $commentID = 1;
+        $commentID = -1; // TODO: Need to find commentID for comment to remove
 
         // Make Comment object
         $comment = new comment();

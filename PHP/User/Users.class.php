@@ -11,7 +11,7 @@ class Users implements UsersInterface {
 		$users = array();
 
         try {
-            $stmt = $this->db->prepare("SELECT * FROM `User` ORDER BY ");
+            $stmt = $this->db->prepare("SELECT * FROM `User` ORDER BY UserID DESC ");
             $stmt->execute();
             while ($user = $stmt->fetchObject("User")) {
                 $users[] = $user;
@@ -77,7 +77,7 @@ class Users implements UsersInterface {
 
     public function addUser(User $user) : int {
         try {
-            $stmt = $this->db->prepare("INSERT INTO `User` (Username, Email, PassHash, VerificationKey, FirstName, LastName) VALUES (:username,:email,:passHash,:verificationKey,:firstName,:lastName)"); // TODO -> PassHash her?
+            $stmt = $this->db->prepare("INSERT INTO `User` (Username, Email, PassHash, VerificationKey, FirstName, LastName) VALUES (:username,:email,:passHash,:verificationKey,:firstName,:lastName)");
             $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
             $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
             $stmt->bindValue(':passHash', $user->getPassHash(), PDO::PARAM_STR);
@@ -87,7 +87,6 @@ class Users implements UsersInterface {
 
             $result = $stmt->execute();
 
-            //TODO: return wether or not the user was created, and if not, why it failed
             if ($result) {
                 return true;
             } else {
@@ -140,7 +139,4 @@ class Users implements UsersInterface {
         else
             return false;
     }
-
-
-
 }

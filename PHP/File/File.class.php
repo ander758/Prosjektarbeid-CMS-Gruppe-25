@@ -1,72 +1,285 @@
 <?php
 class file {
-    private $id;
-    private $file;
-    private $author; // ?
-    private $userID;
-    private $filename;
-    private $fileSize;
-    private $mimetype;
-    private $description;
-    private $views;
-    private $date;
+    private $FileID;
+    private $File;
+    private $UserID;
+    private $Author; // ?
+    private $Filename;
+    private $ServerFilename;
+    private $Size;
+    private $Mimetype;
+    private $Description;
+    private $Accessed;
+    private $Views;
+    private $Date;
+    private $Access;
+    private $User_UserID;
+    private $CatalogueID;
+    private $Catalogue_CatalogueID;
 
     function __construct() {
     }
 
-    // Getters
-    function getId() {
-        return $this->id;
-    }
-    function getFile() {
-        return $this->file;
-    }
-    function getAuthor() {
-        return $this->author;
-    }
-    function getUserID() {
-        return $this->userID;
-    }
-    function getFileName() {
-        return $this->filename;
-    }
-    function getFileSize() {
-        return $this->fileSize;
-    }
-    function getMimetype() {
-        return $this->mimetype;
-    }
-    function getDescription() {
-        return $this->description;
-    }
-    function getViews() {
-        return $this->views;
-    }
-    function getDate() {
-        return $this->date;
+    /**
+     * @return mixed
+     */
+    public function getFileID()
+    {
+        return $this->FileID;
     }
 
-    // Setters
-    function setFile($file) {
-        $this->file = $file;
+    /**
+     * @param mixed $FileID
+     */
+    public function setFileID($FileID): void
+    {
+        $this->FileID = $FileID;
     }
-    function setUserID($userID) {
-        $this->userID = $userID;
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->File;
     }
-    function setFilename($filename) { // Trenger vi denne? https://php.net/manual/en/function.rename.php
-        $this->filename = $filename;
+
+    /**
+     * @param mixed $File
+     */
+    public function setFile($File): void
+    {
+        $this->File = $File;
     }
-    function setFileSize($fileSize) {
-        $this->fileSize = $fileSize;
+
+    /**
+     * @return mixed
+     */
+    public function getUserID()
+    {
+        return $this->UserID;
     }
-    function setDescription($description) {
-        $this->description = $description;
+
+    /**
+     * @param mixed $UserID
+     */
+    public function setUserID($UserID): void
+    {
+        $this->UserID = $UserID;
     }
-    function setDate($date) {
-        $this->date = $date;
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->Author;
     }
-    function setMimetype($mimetype) {
-        $this->mimetype = $mimetype;
+
+    /**
+     * @param mixed $Author
+     */
+    public function setAuthor($Author): void
+    {
+        $this->Author = $Author;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->Filename;
+    }
+
+    /**
+     * @param mixed $Filename
+     */
+    public function setFilename($Filename): void
+    {
+        $this->Filename = $Filename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServerFilename()
+    {
+        return $this->ServerFilename;
+    }
+
+    /**
+     * @param mixed $ServerFilename
+     */
+    public function setServerFilename($ServerFilename): void
+    {
+        $this->ServerFilename = $ServerFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSize()
+    {
+        return $this->Size;
+    }
+    public function getSizeInMb()
+    {
+        return round(($this->Size) * pow(2, -20), 2) ;// n bytes =  n * 2^-20 Mb;
+    }
+
+    /**
+     * @param mixed $Size
+     */
+    public function setSize($Size): void
+    {
+        $this->Size = $Size;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMimetype()
+    {
+        return $this->Mimetype;
+    }
+
+    /**
+     * @param mixed $Mimetype
+     */
+    public function setMimetype($Mimetype): void
+    {
+        $this->Mimetype = $Mimetype;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->Description;
+    }
+
+    /**
+     * @param mixed $Description
+     */
+    public function setDescription($Description): void
+    {
+        $this->Description = $Description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessed()
+    {
+        return $this->Accessed;
+    }
+
+    /**
+     * @param mixed $Accessed
+     */
+    public function setAccessed($Accessed): void
+    {
+        $this->Accessed = $Accessed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->Views;
+    }
+
+    /**
+     * @param mixed $Views
+     */
+    public function setViews($Views): void
+    {
+        $this->Views = $Views;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDate()
+    {
+        return $this->Date;
+    }
+
+    /**
+     * @param mixed $Date
+     */
+    public function setDate($Date): void
+    {
+        $this->Date = $Date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccess()
+    {
+        return $this->Access;
+    }
+
+    /**
+     * @param mixed $Access
+     */
+    public function setAccess($Access): void
+    {
+        $this->Access = $Access;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserUserID()
+    {
+        return $this->User_UserID;
+    }
+
+    /**
+     * @param mixed $User_UserID
+     */
+    public function setUserUserID($User_UserID): void
+    {
+        $this->User_UserID = $User_UserID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCatalogueID()
+    {
+        return $this->CatalogueID;
+    }
+
+    /**
+     * @param mixed $CatalogueID
+     */
+    public function setCatalogueID($CatalogueID): void
+    {
+        $this->CatalogueID = $CatalogueID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCatalogueCatalogueID()
+    {
+        return $this->Catalogue_CatalogueID;
+    }
+
+    /**
+     * @param mixed $Catalogue_CatalogueID
+     */
+    public function setCatalogueCatalogueID($Catalogue_CatalogueID): void
+    {
+        $this->Catalogue_CatalogueID = $Catalogue_CatalogueID;
+    }
+
+
 }
 ?>
