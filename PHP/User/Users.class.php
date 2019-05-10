@@ -1,6 +1,5 @@
 <?php
 class Users implements UsersInterface {
-
 	private $db;
 	
 	public function __construct(PDO $db) {
@@ -42,12 +41,35 @@ class Users implements UsersInterface {
         return $files;
     }
 
-	public function showUser(int $id) : User {
+	public function showUser(int $id) : ?User {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM `User` WHERE ID = :id");
+            $stmt = $this->db->prepare("SELECT * FROM `User` WHERE UserID = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetchObject("User");
+            $result = $stmt->fetchObject("User");
+
+            if(!empty($result)) {
+                return $result;
+            } else {
+                return null;
+            }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return null;
+    }
+
+    public function showUserByName(string $username) : ?User {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM `User` WHERE Username = :username");
+            $stmt->bindParam(":username", $username, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchObject("User");
+            if($result) {
+                return $result;
+            } else {
+                return null;
+            }
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -100,10 +122,12 @@ class Users implements UsersInterface {
 
     public function verifyUser($verificationKey) : bool {
 
+        //TODO: verify if key actually exist!
 	    //First we get the UserID associated with the verification key
         $stmt = $this->db->prepare("select `UserID` from `User` where `VerificationKey` =:verificationKey");
         $stmt->bindParam(':verificationKey', $verificationKey, PDO::PARAM_INT);
         $result = $stmt->execute();
+
         $id = $stmt->fetch(PDO::FETCH_ASSOC)['UserID'];
 
         //Then we update the associated user and mark them as verified

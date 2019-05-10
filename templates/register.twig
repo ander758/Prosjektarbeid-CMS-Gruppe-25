@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="../css/login.css">
 <div class="login-page">
-
+    {% if loggedIn==true %}
+        <p style="text-align: center;">You are already registered!</p>
+    {% else %}
     {% if registerSuccess==false %}
     <div class="form">
         <form class="login-form" method="post">
@@ -16,6 +18,9 @@
 
         <label for="username"><b>Username</b></label>
         <input type="text" placeholder="Username" id="username" name="username" maxlength="30" value="{{ POST.username }}" required>
+        {% if userExists==true %}
+            <p class="taken">That username is taken!</p>
+        {% endif %}
 
         <label for="email"><b>E-Mail</b></label>
         <input type="email" placeholder="Enter E-Mail" id="email" name="email" maxlength="45" value="{{ POST.email }}" required>
@@ -39,5 +44,6 @@
     </div>
     {% elseif registerSuccess==true %}
         <p>Registration successful! redirecting...<br/>If you are not automatically redirected in 5 seconds, click <a href="index.php">here</a></p>
+    {% endif %}
     {% endif %}
 </div>

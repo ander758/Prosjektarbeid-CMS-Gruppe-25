@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('DB.class.php');
 require_once('User/User.class.php');
 require_once('User/UsersInterface.class.php');
@@ -9,8 +10,11 @@ require_once '../vendor/autoload.php'; // ../ For relativ path
 $loader = new Twig_Loader_Filesystem('../templates'); // ../?
 $twig = new Twig_Environment($loader);
 $users = new Users(DB::getDBConnection());
+include_once '5RecentFiles.php';
+if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR']){
+    echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name']));
 
-if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
+} else if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
     if(isset($_POST['psw']) && isset($_POST['psw-repeat']) && $_POST['psw'] == $_POST['psw-repeat']) {
 
 
@@ -26,17 +30,23 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
         $user = User::createUser($username, $email, $firstName, $lastName);
         $user->setPassHash($passHash);
         $user->setVerificationKey($key);
-        if($users->addUser($user)) {
+
+        $userExists=false;
+        if($users->showUserByName($username)){
+            $userExists=true;
+        }
+
+        if(!$userExists &&$users->addUser($user)) {
             sendVerificationMail($user->getEmail(), $user->getVerificationKey());
             header( "refresh:5; url=index.php" );
-            echo $twig->render('main.twig', array('register'=>true, 'POST'=>$_POST, 'registerSuccess' => true));
+            echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'POST'=>$_POST, 'registerSuccess' => true));
 
         } else {
-            echo $twig->render('main.twig', array('register'=>true, 'POST'=>$_POST, 'registerSuccess' => false));
+            echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'POST'=>$_POST, 'userExists'=>$userExists, 'registerSuccess' => false));
         }
 
     } else {
-        echo $twig->render('main.twig', array('register'=>true, 'passNoMatch' => true, 'POST'=>$_POST, 'registerSuccess' => false));
+        echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'passNoMatch' => true, 'POST'=>$_POST, 'registerSuccess' => false));
     }
 } elseif (isset($_POST['cancel_signup'])) {
     // Redirect back to index page...
@@ -44,6 +54,6 @@ if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email
     // Exit current script
     die();
 } else {
-    echo $twig->render('main.twig', array('register'=>true, 'loggedIn' => false, 'POST'=>$_POST, 'registerSuccess' => false));
+    echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'loggedIn' => false, 'POST'=>$_POST, 'registerSuccess' => false));
 }
 ?>

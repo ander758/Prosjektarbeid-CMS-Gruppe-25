@@ -9,41 +9,47 @@ $twig = new Twig_Environment($loader, array(
 //    'cache' => './compilation_cache',
 ));
 
+include_once '5RecentFiles.php';
+
 $db = DB::getDBConnection();
 
 if ($db==null) {
-    echo $twig->render('main.twig', array('error'=>true, 'msg' => 'Unable to connect to the database!'));
+    echo $twig->render('main.twig', array('links'=>$links, 'error'=>true, 'msg' => 'Unable to connect to the database!'));
     die();  // Abort further execution of the script
 }
 
 $user = new User();
 $status=$user->checkLogin($db);
 
-if(isset($_GET['action']) && $_GET['action']=='logout'){
-    if($user->loggedIn()){
-        $user->logOut();
-        session_destroy();
-        //TODO: add twig-template for this
-        echo "logged out";
-        exit();
-    }
-    else {
-        //TODO: add twig-template for this
-        echo "not logged in";
-        exit();
-    }
+
+
+if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_SESSION['clientIp']) && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR'] && !isset($_GET['action'])){
+    echo $twig->render('main.twig', array('links'=>$links, 'login'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name']));
+
 }
 
-if ($user->loggedIn()) {
-    if(!isset($_SESSION['clientIp'])){
-        $_SESSION['clientIp']=$_SERVER['REMOTE_ADDR'];
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    if ($user->loggedIn()) {
+        $user->logOut();
+        session_destroy();
+        header( "refresh:5; url=index.php" );
+        echo $twig->render('main.twig', array('links'=>$links, 'login'=>true, 'loggedOut' => true));
+        exit();
     } else {
-        $_SESSION['clientIp']=$_SERVER['REMOTE_ADDR'];
+        echo $twig->render('main.twig', array('links'=>$links, 'login'=>true, 'notLoggedIn' => true));
+        exit();
     }
-    //Logged in, show logged-in page, then redirect to index
-    header("Location: index.php");
-}
-else{
-    //Not logged in, show log-in page
-    echo $twig->render('main.twig', array('login'=>true, 'loggedIn'=>false, 'status'=>$status));
+} else {
+    if ($user->loggedIn()) {
+        if (!isset($_SESSION['clientIp'])) {
+            $_SESSION['clientIp'] = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $_SESSION['clientIp'] = $_SERVER['REMOTE_ADDR'];
+        }
+        header( "refresh:5; url=index.php" );
+        echo $twig->render('main.twig', array('links'=>$links, 'login'=>true, 'loginSuccess' => true));
+    } else {
+        //Not logged in, show log-in page
+        echo $twig->render('main.twig', array('links' => $links, 'login' => true, 'loggedIn' => false, 'status' => $status));
+    }
 }

@@ -1,10 +1,10 @@
 <?php
 class User {
-    private $id=-1;
-    private $username;
-    private $email;
-    private $firstName;
-    private $lastName;
+    private $UserID=-1;
+    private $Username;
+    private $Email;
+    private $FirstName;
+    private $LastName;
     private $loggedIn = false;
     private $db;
     private $passHash;
@@ -15,31 +15,31 @@ class User {
     //lets us create a new user with specified variables
     public static function createUser($username, $email, $firstName, $lastName) {
         $obj = new self();
-        $obj->username=$username;
-        $obj->email=$email;
-        $obj->firstName=$firstName;
-        $obj->lastName=$lastName;
+        $obj->Username=$username;
+        $obj->Email=$email;
+        $obj->FirstName=$firstName;
+        $obj->LastName=$lastName;
         return $obj;
     }
 
     // Getters
-    public function getId() {
-        return $this->id;
+    public function getUserID() {
+        return $this->UserID;
     }
     public function getUsername() {
-        return $this->username;
+        return $this->Username;
     }
     function getEmail() {
-        return $this->email;
+        return $this->Email;
     }
     function getFirstName() {
-        return $this->firstName;
+        return $this->FirstName;
     }
     function getLastName() {
-        return $this->lastName;
+        return $this->LastName;
     }
     function getName() {
-        return $this->firstName . " " . $this->lastName;
+        return $this->FirstName . " " . $this->LastName;
     }
     function getPassHash(){
         return $this->passHash;
@@ -49,18 +49,18 @@ class User {
     }
 
     // Setters
-    function setUsername($username) {
-        $this->username = $username;
+    function setUsername($Username) {
+        $this->Username = $Username;
     }
-    function setEmail($email) {
-        $this->email = $email;
+    function setEmail($Email) {
+        $this->Email = $Email;
     }
-    function setFirstName($firstName) {
-        $this->firstName = $firstName;
+    function setFirstName($FirstName) {
+        $this->FirstName = $FirstName;
     }
 
-    function setLastName($lastName) {
-        $this->lastName = $lastName;
+    function setLastName($LastName) {
+        $this->LastName = $LastName;
     }
     function setPassHash($passHash){
         $this->passHash=$passHash;
@@ -103,7 +103,7 @@ class User {
             if($row['Verified']==1) {
                 if (password_verify($pwd, $row['PassHash'])) {
                     $_SESSION['id'] = $row['UserID'];
-                    $this->id = $row['UserID'];
+                    $this->UserID = $row['UserID'];
                     $_SESSION['name'] = ucfirst($row['FirstName']);
                     $_SESSION['loggedIn'] = true;
                     $this->loggedIn = true;

@@ -9,17 +9,19 @@ $twig = new Twig_Environment($loader, array(
 //    'cache' => './compilation_cache',
 ));
 
+include_once '5RecentFiles.php';
+
 //TODO: Add autologin when verified?
 
 
-if(isset($_GET['key'])){
+if(isset($_GET['key']) && !empty($_GET['key'])){
 
     $users = new Users(DB::getDBConnection());
     if($users->verifyUser($_GET['key'])){
-        echo $twig->render('verify.twig', array('verified' => true));
+        echo $twig->render('main.twig', array('links'=>$links, 'verify'=> true, 'verified' => true));
     } else {
-        echo $twig->render('verify.twig', array('verified' => false));
+        echo $twig->render('main.twig', array('links'=>$links, 'verify'=> true, 'verified' => false));
     }
 } else {
-    echo $twig->render('verify.twig', array('noVerify' => true));
+    echo $twig->render('main.twig', array('links'=>$links, 'verify'=> true, 'noVerify' => true));
 }
