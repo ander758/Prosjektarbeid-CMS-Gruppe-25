@@ -24,7 +24,7 @@ class CommentRegister implements CommentInterface {
         return $comments;
     }
 
-    public function showAllCommentsFromFile(int $fileID): Comment
+    public function showAllCommentsFromFile(int $fileID): Array
     {
         // Return all comments in given File by comment's FileID
         $comments = array();
@@ -36,7 +36,6 @@ class CommentRegister implements CommentInterface {
             while ($comment = $stmt->fetchObject("Comment")) {
                 $comments[] = $comment;
             }
-            return $comments;
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
         }

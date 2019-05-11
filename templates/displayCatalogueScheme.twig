@@ -12,11 +12,13 @@
     <div class="container">
         <h2>Legg til katalog</h2>
 
-        <label for="Cataologue_CatalogueID">Velg eventuell overordnet katalog for din nye</label>
-        <select name="Cataologue_CatalogueID">
-                <option value="o">Ingen overordnet katalog</option>
+        <label for="Catalogue_CatalogueID">Velg eventuell overordnet katalog for din nye</label>
+        <select name="Catalogue_CatalogueID">
+                <option value="0">Ingen overordnet katalog</option>
             {% for catalogue in catalogues %}
-                <option value="{{ catalogue.getCatalogueID }}">{{ catalogue.getName }}</option>
+                {{ catalogue.getName() }} <br />
+                {{ catalogue.getCatalogue_CatalogueID() }}
+                <option value="{{ catalogue.getCatalogue_CatalogueID() }}">{{ catalogue.getName }}</option>
             {% endfor %} <br>
         </select> <br>
 

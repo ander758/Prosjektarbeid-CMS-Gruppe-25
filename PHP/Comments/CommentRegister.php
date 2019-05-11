@@ -48,7 +48,9 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST[
 } elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
     // Gather data from comment to delete
     $UserID = $_SESSION['id'];
-    $commentID = -1; // TODO: Need to find commentID for comment to remove
+    $CommentID = $_POST['hiddenCommentID'];
+
+    //$commentID = -1; // TODO: Need to find commentID for comment to remove
 
     // Make Comment object
     $comment = new comment();

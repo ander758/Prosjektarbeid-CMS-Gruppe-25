@@ -39,12 +39,18 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['c
     //Gather data
     $Name = filter_input(INPUT_POST, 'catalogueName', FILTER_SANITIZE_STRING);
     $Catalogue_CatalogueID = filter_input(INPUT_POST, 'Catalogue_CatalogueID', FILTER_SANITIZE_NUMBER_INT);
+    alert($Catalogue_CatalogueID);
 
-    $catalogue = new Catalogue();
-    $catalogue->setName($Name);
-    $catalogue->setCatalogue_CatalogueID($Catalogue_CatalogueID);
 
-    $catalogueRegister->addCatalogue($catalogue);
+    // Add the catalogue
+    if ($Catalogue_CatalogueID == 0) {
+        $catalogueRegister->addCatalogue($Name, 0);
+        alert("wasnull");
+    }
+    else {
+        $catalogueRegister->addCatalogue($Name, $Catalogue_CatalogueID);
+        alert("was" . $Catalogue_CatalogueID);
+    }
 }
 
 

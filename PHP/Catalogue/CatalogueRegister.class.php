@@ -10,7 +10,7 @@ class CatalogueRegister implements CatalogueInterface {
     {
         $catalogues = array();
         try {
-            $stmt = $this->db->query("SELECT * FROM Cataologue ORDER BY Name");
+            $stmt = $this->db->query("SELECT * FROM Catalogue ORDER BY Name");
             $stmt->execute();
             while ($catalogue = $stmt->fetchObject("Catalogue")) {
                 $catalogues[] = $catalogue;
@@ -24,7 +24,7 @@ class CatalogueRegister implements CatalogueInterface {
     public function showCatalogue(int $CatalogueID): Catalogue
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM Cataologue WHERE CatalogueID = :catalogueID");
+            $stmt = $this->db->prepare("SELECT * FROM Catalogue WHERE CatalogueID = :catalogueID");
             $stmt->bindParam(":catalogueID", $CatalogueID, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -34,15 +34,35 @@ class CatalogueRegister implements CatalogueInterface {
         }
     }
 
-    public function addCatalogue(Catalogue $catalogue)
+    public function addCatalogue(string $Name, int $Catalogue_CatalogueID)
     {
+        //if ($catalogue->getCatalogue_CatalogueID() != 0) {
+        $bool = NULL;
             try {
-                alert($catalogue->getName());
-                alert($catalogue->getCatalogue_CatalogueID());
-                $stmt = $this->db->query("INSERT INTO `Cataologue`(`Name`,`Cataologue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
+                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
+                $stmt->bindParam(':name', $Name);
+                if ($Catalogue_CatalogueID == 0)
+                    $stmt->bindParam(':catalogue_CatalogueID', $bool);
+                else
+                    $stmt->bindParam(':catalogue_CatalogueID', $Catalogue_CatalogueID);
 
+
+                $result = $stmt->execute();
+                if ($result) {
+                    alert("Katalog lastet opp!");
+                    return true;
+                } else {
+                    alert("Katalog ble ikke lastet opp!");
+                    return false;
+                }
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
+            }
+        /*} else if ($catalogue->getCatalogue_CatalogueID() == NULL) {
+            try {
+                // Add as master catalogue (Catalogue_CatalogueID = null)
+                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, NULL)");
                 $stmt->bindValue(':name', $catalogue->getName(), PDO::PARAM_STR);
-                $stmt->bindValue(':catalogue_CatalogueID', $catalogue->getCatalogue_CatalogueID(), PDO::PARAM_INT);
 
                 $stmt->execute();
                 $result = $stmt->execute();
@@ -51,7 +71,7 @@ class CatalogueRegister implements CatalogueInterface {
             } catch (InvalidArgumentException $e) {
                 print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
             }
-
+        }*/
     }
 
     public function fetchLastCatalogueID(): int
