@@ -34,23 +34,23 @@ CREATE UNIQUE INDEX `Username_UNIQUE` ON `stud_v19_ese`.`User` (`Username` ASC);
 
 
 -- -----------------------------------------------------
--- Table `stud_v19_ese`.`Cataologue`
+-- Table `stud_v19_ese`.`Catalogue`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `stud_v19_ese`.`Cataologue` ;
+DROP TABLE IF EXISTS `stud_v19_ese`.`Catalogue` ;
 
-CREATE TABLE IF NOT EXISTS `stud_v19_ese`.`Cataologue` (
+CREATE TABLE IF NOT EXISTS `stud_v19_ese`.`Catalogue` (
   `CatalogueID` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(45) NULL,
-  `Cataologue_CatalogueID` INT NOT NULL,
+  `Catalogue_CatalogueID` INT NOT NULL,
   PRIMARY KEY (`CatalogueID`),
-  CONSTRAINT `fk_Cataologue_Cataologue1`
-    FOREIGN KEY (`Cataologue_CatalogueID`)
-    REFERENCES `stud_v19_ese`.`Cataologue` (`CatalogueID`)
+  CONSTRAINT `fk_Catalogue_Catalogue1`
+    FOREIGN KEY (`Catalogue_CatalogueID`)
+    REFERENCES `stud_v19_ese`.`Catalogue` (`CatalogueID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Cataologue_Cataologue1_idx` ON `stud_v19_ese`.`Cataologue` (`Cataologue_CatalogueID` ASC);
+CREATE INDEX `fk_Catalogue_Catalogue1_idx` ON `stud_v19_ese`.`Catalogue` (`Catalogue_CatalogueID` ASC);
 
 
 -- -----------------------------------------------------
@@ -74,16 +74,16 @@ CREATE TABLE IF NOT EXISTS `stud_v19_ese`.`File` (
   `Access` TINYINT(1) NOT NULL,
   `User_UserID` INT NOT NULL,
   `CatalogueID` INT NOT NULL,
-  `Cataologue_CatalogueID` INT NOT NULL,
-  PRIMARY KEY (`FiletID`, `User_UserID`, `Cataologue_CatalogueID`),
+  `Catalogue_CatalogueID` INT NOT NULL,
+  PRIMARY KEY (`FiletID`, `User_UserID`, `Catalogue_CatalogueID`),
   CONSTRAINT `fk_Document_User1`
     FOREIGN KEY (`User_UserID`)
     REFERENCES `stud_v19_ese`.`User` (`UserID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_File_Cataologue1`
-    FOREIGN KEY (`Cataologue_CatalogueID`)
-    REFERENCES `stud_v19_ese`.`Cataologue` (`CatalogueID`)
+  CONSTRAINT `fk_File_Catalogue1`
+    FOREIGN KEY (`Catalogue_CatalogueID`)
+    REFERENCES `stud_v19_ese`.`Catalogue` (`CatalogueID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -96,7 +96,7 @@ CREATE UNIQUE INDEX `ServerFilename_UNIQUE` ON `stud_v19_ese`.`File` (`ServerFil
 
 CREATE INDEX `fk_Document_User1_idx` ON `stud_v19_ese`.`File` (`User_UserID` ASC);
 
-CREATE INDEX `fk_File_Cataologue1_idx` ON `stud_v19_ese`.`File` (`Cataologue_CatalogueID` ASC);
+CREATE INDEX `fk_File_Catalogue1_idx` ON `stud_v19_ese`.`File` (`Catalogue_CatalogueID` ASC);
 
 
 -- -----------------------------------------------------
