@@ -243,4 +243,18 @@ class FileRegister implements FileInterface {
             print $e->getMessage() . PHP_EOL;
         }
     }
+
+    public function fetchLast5():array{
+        try {
+            $files = array();
+            $stmt = $this->db->prepare("SELECT * FROM File ORDER BY FileID LIMIT 5");
+            $stmt->execute();
+            while ($file = $stmt->fetchObject("File")) {
+                $files[] = $file;
+            }
+        } catch (InvalidArgumentException $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
+        return $files;
+    }
 }

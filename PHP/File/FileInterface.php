@@ -12,4 +12,5 @@ interface FileInterface {
     public function showLatestFiles(int $access): array;                // Return array of latest 5 files
     public function showUsersFiles(int $UserID): array;                 // Return all files owned by user
     public function fetchFileCatalogue(int $CatalogueID): string;       // Return Catalogue as string in a File
+    public function fetchLast5(): array;
 }

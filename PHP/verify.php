@@ -9,7 +9,7 @@ $twig = new Twig_Environment($loader, array(
 //    'cache' => './compilation_cache',
 ));
 
-include_once '5RecentFiles.php';
+include_once 'File/RecentFiles.php';
 
 //TODO: Add autologin when verified?
 
