@@ -156,24 +156,21 @@ class FileRegister implements FileInterface {
         return $count;
     }
 
-    public function isFileOwner(int $fileID, int $userID): bool
+
+    public function isFileOwner(int $fileID, int $userID): File // TODO change return in interface
     {
-        // Check if the UserID from fetched result from table `Files` equals $userID
         try {
-            $stmt = $this->db->prepare("SELECT UserID FROM Files WHERE FileID = :fileID");
+            $stmt = $this->db->prepare("SELECT * FROM File WHERE FileID = :fileID AND UserID = :userID");
             $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
-            //$stmt->execute();
-            $stmt->fetch(PDO::PARAM_INT);
-            if ($stmt == $userID) {
-                return true;
-            } else {
-                echo "Could not delete file, not authorized!";
-                return false;
-            }
+            $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchObject("File");
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
+        //return $file; // TODO: get user id from objcet
     }
+
 
     public function fetchAuthor(int $userID): string
     {

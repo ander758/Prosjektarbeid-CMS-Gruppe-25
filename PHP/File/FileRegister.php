@@ -26,8 +26,7 @@ $commentRegister = new CommentRegister(DB::getDBConnection());
 $catalogueRegister = new CatalogueRegister(DB::getDBConnection());
 
 
-
-// Alert msg of number of files in database
+// Alert msg of number of files in database, implement this on counter at index.php
 alert("Det er " . $fileRegister->countAllFiles() . " filer i tabellen File");
 
 
@@ -54,7 +53,6 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
     }
 }
 //</editor-fold>
-
 
 //<editor-fold desc="File Uploading">
 // Show file upload screen if logged in
@@ -119,8 +117,10 @@ if (isset($_POST['submit_fileDelete'])) {
     // Gather UserID and FileID
     $FileID = filter_input(INPUT_POST, 'fileDeleteButton', FILTER_SANITIZE_NUMBER_INT);
     $UserID = $_SESSION['id'];
-    // Check if userID is owner of file to delete
-    if ($fileRegister->isFileOwner($FileID, $UserID)){
+
+    // Check if userID is owner of file before delete
+    $file = $fileRegister->isFileOwner($FileID, $UserID);
+    if ($file->getUserID() == $UserID){
         // Delete certain File
         $fileRegister->deleteFile($FileID);
         // Delete all comments in deleted File
