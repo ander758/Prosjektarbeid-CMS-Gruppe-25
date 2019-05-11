@@ -25,21 +25,35 @@ $fileRegister = new FileRegister(DB::getDBConnection());
 $catalogueRegister = new CatalogueRegister(DB::getDBConnection());
 
 
-if(isset($_GET['view']) && $_GET['view']=='all'){
+if(isset($_GET['view']) && $_GET['view']=='all') {
 
     //TODO: fetch and generate tree of all files
 
-    if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') $access = 1; else $access = 0;
+    if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == 'yes' && $_SESSION['clientIp'] == $_SERVER['REMOTE_ADDR']) $access = 1; else $access = 0;
     try {
         $catalogues = $catalogueRegister->showAllCatalogues();
         $files = $fileRegister->showAllFiles($access);
 
-        echo $twig->render('main.twig', array('links'=>$links, 'files'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name'], 'fileArr' => $files, 'catalogueArr' => $catalogues));
+       if(isset($_SESSION['name'])){
+           echo $twig->render('main.twig', array('links' => $links, 'files' => true, 'loggedIn' => true, 'name' => $_SESSION['name'], 'fileArr' => $files, 'catalogueArr' => $catalogues));
+
+       } else {
+           echo $twig->render('main.twig', array('links' => $links, 'files' => true, 'loggedIn' => false, 'fileArr' => $files, 'catalogueArr' => $catalogues));
+       }
+    } catch (Exception $e) {
+        print "Could not show files! " . $e->getMessage() . PHP_EOL;
+    }
+
+}elseif(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == 'yes' && $_SESSION['clientIp'] == $_SERVER['REMOTE_ADDR']){
+
+    try {
+        $catalogues = $catalogueRegister->showAllCatalogues();
+        $files = $fileRegister->showUsersFiles($_SESSION['id']);
+        echo $twig->render('main.twig', array('links' => $links, 'files' => true, 'loggedIn' => true, 'name' => $_SESSION['name'], 'fileArr' => $files, 'catalogueArr' => $catalogues));
     } catch (Exception $e) {
         print "Could not show files! " . $e->getMessage() . PHP_EOL;
     }
 
 } else {
-    //TODO: fetch and generate tree of personal files
-    echo $twig->render('main.twig', array('links'=>$links, 'files'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name']));
+    echo $twig->render('main.twig', array('links'=>$links, 'files'=>true, 'loggedIn' => false,));
 }
