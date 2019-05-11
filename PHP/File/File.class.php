@@ -3,7 +3,7 @@ class file {
     private $FileID;
     private $File;
     private $UserID;
-    private $Author; // ?
+    private $Author; // if someone else created the file
     private $Filename;
     private $ServerFilename;
     private $Size;
