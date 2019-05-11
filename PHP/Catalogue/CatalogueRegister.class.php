@@ -36,6 +36,45 @@ class CatalogueRegister implements CatalogueInterface {
 
     public function addCatalogue(string $Name, int $Catalogue_CatalogueID)
     {
+        if ($Catalogue_CatalogueID != 0) {
+            // Add master Catalogue
+            try {
+                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
+                $stmt->bindParam(':name', $Name);
+                $stmt->bindParam(':catalogue_CatalogueID', $Catalogue_CatalogueID);
+
+                $result = $stmt->execute();
+                if ($result) {
+                    alert("Katalog lastet opp!");
+                    return true;
+                } else {
+                    alert("Katalog ble ikke lastet opp!");
+                    return false;
+                }
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
+            }
+        } else {
+            // Add sub Catalogue
+            try {
+                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`) VALUES (:name)");
+                $stmt->bindParam(':name', $Name);
+
+                $result = $stmt->execute();
+                if ($result) {
+                    alert("Katalog lastet opp!");
+                    return true;
+                } else {
+                    alert("Katalog ble ikke lastet opp!");
+                    return false;
+                }
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
+            }
+        }
+
+
+
         //if ($catalogue->getCatalogue_CatalogueID() != 0) {
         $bool = NULL;
             try {
@@ -45,7 +84,6 @@ class CatalogueRegister implements CatalogueInterface {
                     $stmt->bindParam(':catalogue_CatalogueID', $bool);
                 else
                     $stmt->bindParam(':catalogue_CatalogueID', $Catalogue_CatalogueID);
-
 
                 $result = $stmt->execute();
                 if ($result) {
