@@ -34,24 +34,29 @@ class CatalogueRegister implements CatalogueInterface {
         }
     }
 
-    public function addCatalogue(Catalogue $catalogue): int
+    public function addCatalogue(Catalogue $catalogue)
     {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO `Cataologue`(`CatalogueID`, `Name`, `Cataologue_CatalogueID`) VALUES (NULL,:name,:cataologue_CatalogueID)");
-            $stmt->bindParam(':name', $catalogue->getName(), PDO::PARAM_STR);
-            $stmt->bindParam('cataologue_CatalogueID', $catalogue->getCatalogue_CatalogueID(), PDO::PARAM_INT);
+            try {
+                alert($catalogue->getName());
+                alert($catalogue->getCatalogue_CatalogueID());
+                $stmt = $this->db->query("INSERT INTO `Cataologue`(`Name`,`Cataologue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
 
-            $result = $stmt->execute();
+                $stmt->bindValue(':name', $catalogue->getName(), PDO::PARAM_STR);
+                $stmt->bindValue(':catalogue_CatalogueID', $catalogue->getCatalogue_CatalogueID(), PDO::PARAM_INT);
 
-            if ($result) {
-                echo "Catalogue added!";
-                return false;
-            } else {
-                echo "Failed adding catalogue!";
-                return false;
+                $stmt->execute();
+                $result = $stmt->execute();
+                if ($result)
+                    echo "Catalogue added!";
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
             }
-        } catch (InvalidArgumentException $e) {
-            print $e->getMessage() . PHP_EOL;
-        }
+
+    }
+
+    public function fetchLastCatalogueID(): int
+    {
+        // TODO: Implement fetchLastCatalogueID() method.
+
     }
 }
