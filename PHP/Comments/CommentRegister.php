@@ -1,49 +1,59 @@
 <?php
-    require_once ('../DB.class.php');
-    // Comment
-    require_once ('Comment.class.php');
-    require_once ('CommentInterface.php');
-    require_once ('CommentRegister.php');
-    // DeletedComment
-    require_once('DeletedComment.class.php');
-    require_once('DeletedCommentInterface.php');
-    require_once('DeletedCommentRegister.class.php');
 
-    // twig
-    require_once ('../../vendor/autoload.php');
-    $loader = new Twig_Loader_Filesystem('../templates');
-    $twig = new Twig_Environment($loader);
+session_start();
+require_once('../DB.class.php');
+// File
+require_once('../File/File.class.php');
+require_once('../File/FileInterface.php');
+require_once('../File/FileRegister.class.php');
+// Comments
+require_once('../Comments/Comment.class.php');
+require_once('../Comments/CommentInterface.php');
+require_once('../Comments/CommentRegister.class.php');
+// Catalogue
+require_once('../Catalogue/Catalogue.class.php');
+require_once('../Catalogue/CatalogueInterface.class.php');
+require_once('../Catalogue/CatalogueRegister.class.php');
 
-    // Registers
-    $commentRegister = new CommentRegister(DB::getDBConnection());
-    $deletedCommentRegister = new DeletedCommentRegister(DB::getDBConnection());
+// twig
+require_once('../../vendor/autoload.php');
+$loader = new Twig_Loader_Filesystem('../../templates');
+$twig = new Twig_Environment($loader);
 
-    if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_comment'])) {
-        // Gather date from submitted Comment
-        $fileID = intval($_GET['fileID']);
-        $userID = intval($_GET['id']); // UserID
-        $date = date("Y-m-d H:i:s");
-        $commentContent = filter_input(INPUT_POST, 'commentContent', FILTER_SANITIZE_STRING);
+// Registers
+$fileRegister = new FileRegister(DB::getDBConnection());
+$commentRegister = new CommentRegister(DB::getDBConnection());
+$catalogueRegister = new CatalogueRegister(DB::getDBConnection());
 
-        // Make Comment object
-        $comment = new comment();
-        $comment->setFileID($fileID);
-        $comment->setUserID($userID);
-        $comment->setDate($date);
-        $comment->setComment($commentContent);
 
-        // Pass the object to $commentRegister to add it to the database
-        $commentRegister->addComment($comment);
 
-    } elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
-        // Gather data from comment to delete
-        $userID = intval($_GET['id']);
-        $commentID = -1; // TODO: Need to find commentID for comment to remove
 
-        // Make Comment object
-        $comment = new comment();
-        $comment->setCommentID($commentID);
+if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_comment'])) {
+    // Gather date from submitted Comment
+    $UserID = $_SESSION['id'];
 
-        // Delete the comment from database
-        $commentRegister->deleteComment($commentID);
-    }
+    $Date = date("Y-m-d H:i:s");
+    $commentContent = filter_input(INPUT_POST, 'commentContent', FILTER_SANITIZE_STRING);
+
+    // Make Comment object
+    $comment = new comment();
+    $comment->setFileID($FileID); // TODO get file id
+    $comment->setUserID($UserID);
+    $comment->setDate($Date);
+    $comment->setComment($commentContent);
+
+    // Pass the object to $commentRegister to add it to the database
+    $commentRegister->addComment($comment);
+
+} elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
+    // Gather data from comment to delete
+    $UserID = $_SESSION['id'];
+    $commentID = -1; // TODO: Need to find commentID for comment to remove
+
+    // Make Comment object
+    $comment = new comment();
+    $comment->setCommentID($commentID);
+
+    // Delete the comment from database
+    $commentRegister->deleteComment($commentID);
+}

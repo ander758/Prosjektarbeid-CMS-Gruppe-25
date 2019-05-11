@@ -15,7 +15,7 @@ class CommentRegister implements CommentInterface {
             $stmt->execute();
 
             while ($comment = $stmt->fetchObject("Comment")) {
-                $comments = $comment;
+                $comments[] = $comment;
             }
             return $comments;
         } catch (Exception $e) {
@@ -34,7 +34,7 @@ class CommentRegister implements CommentInterface {
             $stmt->execute();
 
             while ($comment = $stmt->fetchObject("Comment")) {
-                $comments = $comment;
+                $comments[] = $comment;
             }
             return $comments;
         } catch (Exception $e) {

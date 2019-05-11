@@ -11,13 +11,16 @@
     }
 </style>
 
+
+
+<!--Show all files-->
 {% if files %}
 <h1>Alle filer:</h1>
 <ul>
     {% for file in files %}
         <li>
             <p class="inline">Filnavn: {{ file.getFileName }}</p>
-            <p class="inline">Eier: {{ file.getAuthor }}</p>
+            <p class="inline">Eier ID: {{ file.getUserID }}</p>
             <p class="inline">Størrelse: {{ file.getSize }}</p>
             <p class="inline">Views: {{ file.getViews }}</p>
             <p class="inline">Dato: {{ file.getDate }}</p> <br>
@@ -36,7 +39,7 @@
     {% for file in userFiles %}
         <li>
             <p class="inline">Filnavn: {{ file.getFileName }}</p>
-            <p class="inline">Eier: {{ file.getAuthor }}</p>
+            <p class="inline">Eier ID: {{ file.getUserID }}</p>
             <p class="inline">Størrelse: {{ file.getSizeInMb }}Mb</p>
             <p class="inline">Views: {{ file.getViews }}</p>
             <p class="inline">Dato: {{ file.getDate }}</p> <br>
@@ -55,7 +58,7 @@
         <ul>
             {% for file in userFilesToDelete %}
                 <li>
-                    <input type="radio" name="fileDeleteButton" value="{{ file.getFileID }}">Filnavn: {{ file.getFileName }} Eier: {{ file.getAuthor }} Størrelse: {{ file.getSizeInMb }}Mb Dato: {{ file.getDate }}<br>
+                    <input type="radio" name="fileDeleteButton" value="{{ file.getFileID }}">Filnavn: {{ file.getFileName }} Størrelse: {{ file.getSizeInMb }}Mb Dato: {{ file.getDate }}<br>
                 </li>
             {% endfor %}
         </ul>

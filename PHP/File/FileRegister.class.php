@@ -1,7 +1,8 @@
 <?php
 class FileRegister implements FileInterface {
+
 	private $db;
-	
+
 	public function __construct(PDO $db) {
 		$this->db = $db;
 	}
@@ -42,7 +43,6 @@ class FileRegister implements FileInterface {
             $stmt = $this->db->prepare("SELECT * FROM File WHERE FileID = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
-
             return $stmt->fetchObject("File");
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
@@ -55,7 +55,6 @@ class FileRegister implements FileInterface {
         try {
             $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`)                                                            
                                                             VALUES (:file,   :userID,  :author,  :filename,  :serverFilename,  :size,  :mimetype,  :description ,  0        ,   0    , :opprettet        ,:access  , :user_UserID , :catalogueID,:cataologue_CatalogueID)");
-
             $opprettet = date("Y-m-d H:i:s");
             $stmt->bindValue(':file', $file->getFile(), PDO::PARAM_LOB); // TODO: LOB??
             $stmt->bindValue(':userID', $file->getUserID(), PDO::PARAM_INT);
@@ -70,9 +69,7 @@ class FileRegister implements FileInterface {
             $stmt->bindValue(':user_UserID', $file->getUserUserID(), PDO::PARAM_INT);
             $stmt->bindValue(':catalogueID', $file->getCatalogueID(), PDO::PARAM_INT);
             $stmt->bindValue(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
-
             $result = $stmt->execute();
-
             if ($result) {
                 alert("Fil lastet opp!");
                 return true;
@@ -83,7 +80,6 @@ class FileRegister implements FileInterface {
             function alert($msg) {
                 echo "<script type='text/javascript'>alert('$msg');</script>";
             }
-
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;
         }
@@ -167,7 +163,7 @@ class FileRegister implements FileInterface {
             $stmt = $this->db->prepare("SELECT UserID FROM Files WHERE FileID = :fileID");
             $stmt->bindParam(':fileID', $fileID, PDO::PARAM_INT);
             //$stmt->execute();
-            $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->fetch(PDO::PARAM_INT);
             if ($stmt == $userID) {
                 return true;
             } else {
@@ -185,7 +181,6 @@ class FileRegister implements FileInterface {
             $stmt = $this->db->prepare("SELECT Author FROM User WHERE UserID = :userID");
             $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
             $stmt->execute();
-
             return $stmt->fetch(PDO::PARAM_STR);
         } catch (InvalidArgumentException $e) {
             print $e->getMessage() . PHP_EOL;

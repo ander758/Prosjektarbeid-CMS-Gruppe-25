@@ -15,7 +15,7 @@ require_once('../Catalogue/Catalogue.class.php');
 require_once('../Catalogue/CatalogueInterface.class.php');
 require_once('../Catalogue/CatalogueRegister.class.php');
 
-// twig
+// twigjhmjhmjhmn
 require_once('../../vendor/autoload.php');
 $loader = new Twig_Loader_Filesystem('../../templates');
 $twig = new Twig_Environment($loader);
@@ -55,6 +55,7 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
 }
 //</editor-fold>
 
+
 //<editor-fold desc="File Uploading">
 // Show file upload screen if logged in
 if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
@@ -66,9 +67,8 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
     }
 }
 // Upload File to database
-if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR'] && isset($_POST['submit_fileUpload'])) {
+if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_fileUpload'])) {
     // Med noe hjelp fra https://bytes.com/topic/php/insights/740327-uploading-files-into-mysql-database-using-php
-
     // Gather data
     $UserID = $_SESSION['id'];
     $blob = $_FILES['uploadedFile']['tmp_name'];
@@ -78,11 +78,11 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['c
     $access = filter_input(INPUT_POST, 'fileAccess', FILTER_SANITIZE_NUMBER_INT);
     $catalogueID = filter_input(INPUT_POST, 'fileCatalogue', FILTER_SANITIZE_NUMBER_INT);
     $description = filter_input(INPUT_POST, 'fileDescription', FILTER_SANITIZE_STRING);
+    $tags = explode(',', filter_input(INPUT_POST, 'fileTages', FILTER_SANITIZE_STRING)); // TODO: Add tags
 
     if (is_uploaded_file($blob) && $size != 0 && $size <= 16777215) {
         try {
             $data = file_get_contents($blob);
-
             $file = new file();
             $file->setFile($data);
             $file->setUserID($UserID);
@@ -96,7 +96,6 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['c
             $file->setUserUserID($UserID);
             $file->setCatalogueID($catalogueID);
             $file->setCatalogueCatalogueID($catalogueID);
-
             $fileRegister->addFile($file, $UserID);
         } catch (Exception $e) {
             print $e->getMessage() . PHP_EOL;
@@ -118,11 +117,8 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes') {
 }
 if (isset($_POST['submit_fileDelete'])) {
     // Gather UserID and FileID
-    $FileID = -1; // TODO: Må finne FileID før vi sletter filen!!! <!--value == userfiles.getFileID!!-->
     $FileID = filter_input(INPUT_POST, 'fileDeleteButton', FILTER_SANITIZE_NUMBER_INT);
-
     $UserID = $_SESSION['id'];
-
     // Check if userID is owner of file to delete
     if ($fileRegister->isFileOwner($FileID, $UserID)){
         // Delete certain File
@@ -132,7 +128,6 @@ if (isset($_POST['submit_fileDelete'])) {
         alert("Fil slettet, filens kommentarer er flyttet til historikken vår :)");
     } else {
         alert("You are not the owner of this file... did not delete file!");
-
     }
 }
 //</editor-fold>
