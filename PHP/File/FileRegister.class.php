@@ -53,8 +53,8 @@ class FileRegister implements FileInterface {
     {
         // Add file to table `File`
         try {
-            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Cataologue_CatalogueID`)                                                            
-                                                            VALUES (:file,   :userID,  :author,  :filename,  :serverFilename,  :size,  :mimetype,  :description ,  0        ,   0    , :opprettet        ,:access  , :user_UserID , :catalogueID,:cataologue_CatalogueID)");
+            $stmt = $this->db->prepare("INSERT INTO `File`(`File`, `UserID`, `Author`, `Filename`, `ServerFilename`, `Size`, `Mimetype`, `Description`, `Accessed`, `Views`, `Date`            ,`Access` , `User_UserID`, `CatalogueID`, `Catalogue_CatalogueID`)                                                            
+                                                            VALUES (:file,   :userID,  :author,  :filename,  :serverFilename,  :size,  :mimetype,  :description ,  0        ,   0    , :opprettet        ,:access  , :user_UserID , :catalogueID,:Catalogue_CatalogueID)");
             $opprettet = date("Y-m-d H:i:s");
             $stmt->bindValue(':file', $file->getFile(), PDO::PARAM_LOB); // TODO: LOB??
             $stmt->bindValue(':userID', $file->getUserID(), PDO::PARAM_INT);
@@ -68,7 +68,7 @@ class FileRegister implements FileInterface {
             $stmt->bindValue(':access', $file->getAccess(), PDO::PARAM_INT);
             $stmt->bindValue(':user_UserID', $file->getUserUserID(), PDO::PARAM_INT);
             $stmt->bindValue(':catalogueID', $file->getCatalogueID(), PDO::PARAM_INT);
-            $stmt->bindValue(':cataologue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
+            $stmt->bindValue(':Catalogue_CatalogueID', $file->getCatalogueCatalogueID(), PDO::PARAM_INT);
             $result = $stmt->execute();
             if ($result) {
                 alert("Fil lastet opp!");
@@ -234,7 +234,7 @@ class FileRegister implements FileInterface {
     public function fetchFileCatalogue(int $CatalogueID): string
     {
         try {
-            $stmt = $this->db->prepare("SELECT Name FROM Cataologue WHERE CatalogueID = :catalogueID");
+            $stmt = $this->db->prepare("SELECT Name FROM Catalogue WHERE CatalogueID = :catalogueID");
             $stmt->bindParam(':catalogueID', $CatalogueID, PDO::PARAM_INT);
             $stmt->execute();
 

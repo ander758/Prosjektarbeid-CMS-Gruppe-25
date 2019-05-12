@@ -15,7 +15,7 @@ require_once('../Catalogue/Catalogue.class.php');
 require_once('../Catalogue/CatalogueInterface.class.php');
 require_once('../Catalogue/CatalogueRegister.class.php');
 
-// twigjhmjhmjhmn
+// twig
 require_once('../../vendor/autoload.php');
 $loader = new Twig_Loader_Filesystem('../../templates');
 $twig = new Twig_Environment($loader);

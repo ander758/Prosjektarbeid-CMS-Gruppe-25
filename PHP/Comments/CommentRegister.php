@@ -34,6 +34,7 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST[
 
     $Date = date("Y-m-d H:i:s");
     $commentContent = filter_input(INPUT_POST, 'commentContent', FILTER_SANITIZE_STRING);
+    $FileID = $_POST['hiddenFileID']; // TODO: Need to find FileID for the File to comment on
 
     // Make Comment object
     $comment = new comment();
@@ -48,14 +49,14 @@ if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST[
 } elseif (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && isset($_POST['submit_deleteComment'])) {
     // Gather data from comment to delete
     $UserID = $_SESSION['id'];
-    $CommentID = $_POST['hiddenCommentID'];
 
-    //$commentID = -1; // TODO: Need to find commentID for comment to remove
+    $CommentID = $_GET['fa'];
+
 
     // Make Comment object
     $comment = new comment();
-    $comment->setCommentID($commentID);
+    $comment->setCommentID($CommentID);
 
     // Delete the comment from database
-    $commentRegister->deleteComment($commentID);
+    $commentRegister->deleteComment($CommentID);
 }

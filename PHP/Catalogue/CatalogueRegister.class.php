@@ -37,7 +37,7 @@ class CatalogueRegister implements CatalogueInterface {
     public function addCatalogue(string $Name, int $Catalogue_CatalogueID)
     {
         if ($Catalogue_CatalogueID != 0) {
-            // Add master Catalogue
+            // Add sub Catalogue
             try {
                 $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
                 $stmt->bindParam(':name', $Name);
@@ -55,61 +55,21 @@ class CatalogueRegister implements CatalogueInterface {
                 print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
             }
         } else {
-            // Add sub Catalogue
+            // Add master Catalogue
             try {
                 $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`) VALUES (:name)");
                 $stmt->bindParam(':name', $Name);
 
                 $result = $stmt->execute();
-                if ($result) {
+                if ($result)
                     alert("Katalog lastet opp!");
-                    return true;
-                } else {
+                else
                     alert("Katalog ble ikke lastet opp!");
-                    return false;
-                }
+
             } catch (InvalidArgumentException $e) {
                 print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
             }
         }
-
-
-
-        //if ($catalogue->getCatalogue_CatalogueID() != 0) {
-        $bool = NULL;
-            try {
-                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, :catalogue_CatalogueID)");
-                $stmt->bindParam(':name', $Name);
-                if ($Catalogue_CatalogueID == 0)
-                    $stmt->bindParam(':catalogue_CatalogueID', $bool);
-                else
-                    $stmt->bindParam(':catalogue_CatalogueID', $Catalogue_CatalogueID);
-
-                $result = $stmt->execute();
-                if ($result) {
-                    alert("Katalog lastet opp!");
-                    return true;
-                } else {
-                    alert("Katalog ble ikke lastet opp!");
-                    return false;
-                }
-            } catch (InvalidArgumentException $e) {
-                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
-            }
-        /*} else if ($catalogue->getCatalogue_CatalogueID() == NULL) {
-            try {
-                // Add as master catalogue (Catalogue_CatalogueID = null)
-                $stmt = $this->db->prepare("INSERT INTO `Catalogue`(`Name`,`Catalogue_CatalogueID`) VALUES (:name, NULL)");
-                $stmt->bindValue(':name', $catalogue->getName(), PDO::PARAM_STR);
-
-                $stmt->execute();
-                $result = $stmt->execute();
-                if ($result)
-                    echo "Catalogue added!";
-            } catch (InvalidArgumentException $e) {
-                print $e->getMessage() . "Failed adding catalogue!" . PHP_EOL;
-            }
-        }*/
     }
 
     public function fetchLastCatalogueID(): int
