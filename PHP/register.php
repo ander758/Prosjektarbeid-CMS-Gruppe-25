@@ -14,11 +14,8 @@ include_once 'File/RecentFiles.php';
 if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']=='yes' && $_SESSION['clientIp']==$_SERVER['REMOTE_ADDR']){
     echo $twig->render('main.twig', array('links'=>$links, 'register'=>true, 'loggedIn' => true, 'name'=>$_SESSION['name']));
 
-} else if (isset($_POST['submit_signup'])) { // TODO -> need to send confirmation email to user before '$userregister->leggTilUser($user);'?
+} else if (isset($_POST['submit_signup'])) {
     if(isset($_POST['psw']) && isset($_POST['psw-repeat']) && $_POST['psw'] == $_POST['psw-repeat']) {
-
-
-        //TODO: verify information is correct before trying to register
 
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);

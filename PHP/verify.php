@@ -11,9 +11,6 @@ $twig = new Twig_Environment($loader, array(
 
 include_once 'File/RecentFiles.php';
 
-//TODO: Add autologin when verified?
-
-
 if(isset($_GET['key']) && !empty($_GET['key'])){
 
     $users = new Users(DB::getDBConnection());
