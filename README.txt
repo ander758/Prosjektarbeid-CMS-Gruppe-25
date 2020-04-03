@@ -1,7 +1,7 @@
 ------------------------------------
 Prosjektarbeid CMS ITE1805 Gruppe 25
 ------------------------------------
-Kark.uit server     : https://kark.uit.no/~aes014/Root/Prosjektarbeid%20CMS%20Gruppe%2025/
+Kark.uit server(NOT IN USE)     : https://kark.uit.no/~aes014/Root/Prosjektarbeid%20CMS%20Gruppe%2025/
 Github repository   : https://github.com/ander758/Prosjektarbeid-CMS-Gruppe-25
 
 
